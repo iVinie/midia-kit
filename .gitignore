@@ -1,0 +1,62 @@
+# ==================================================================
+# Mídia Kit — arquivos que NÃO devem ir para o repositório
+# ==================================================================
+
+# --- Segredos (o mais importante) ---------------------------------
+# Se um dia o atualizar-dados.php entrar em cena, os tokens do
+# Instagram/TikTok ficam nestes arquivos. Token vazado = conta invadida.
+.env
+.env.*
+config.php
+configuracao.php
+segredos.php
+*.token
+tokens.json
+credenciais*.json
+
+# --- Configuração de FTP / deploy ---------------------------------
+# Guardam host, usuário e senha da Hostinger/HostGator em texto puro.
+.ftpconfig
+sftp-config.json
+ftp-sync.json
+deploy.config.js
+*.ftpquota
+filezilla.xml
+
+# --- Lixo do sistema operacional ----------------------------------
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+._*
+
+# --- Editores -----------------------------------------------------
+.vscode/
+.idea/
+*.sublime-workspace
+*.code-workspace
+
+# --- Backups e temporários ----------------------------------------
+*.bak
+*.old
+*.orig
+*.tmp
+*~
+*.zip
+*.rar
+
+# --- Logs ---------------------------------------------------------
+*.log
+error_log
+logs/
+
+# --- Caso o projeto ganhe ferramentas depois ----------------------
+node_modules/
+package-lock.json
+.cache/
+
+# ==================================================================
+# NÃO ignorar (lembrete): index.html, css/, js/dados.js, js/principal.js
+# e a pasta imagens/ — todos fazem parte do site e precisam ser versionados.
+# ==================================================================

@@ -1,0 +1,18 @@
+# Normaliza quebras de linha: o Windows usa CRLF, o servidor Linux usa LF.
+# Com isso o Git guarda LF no repositório e evita diffs falsos de "arquivo inteiro alterado".
+* text=auto eol=lf
+
+# Arquivos de texto do projeto (garante diff legível, nunca "Bin")
+*.html  text
+*.css   text
+*.js    text
+*.md    text
+*.txt   text
+
+# Imagens são binárias: não tentar converter
+*.jpg   binary
+*.jpeg  binary
+*.png   binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
