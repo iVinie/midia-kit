@@ -1,0 +1,7 @@
+# FASE DE APROVACAO
+# Pede aos buscadores que nao indexem a pagina enquanto a Bianca revisa.
+# Quando o midia kit for divulgado, APAGUE este arquivo e a linha
+# <meta name="robots" content="noindex, nofollow"> do index.html.
+
+User-agent: *
+Disallow: /
