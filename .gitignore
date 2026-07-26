@@ -31,6 +31,9 @@ $RECYCLE.BIN/
 .DS_Store
 ._*
 
+# --- RPA: arquivo temporário da gravação atômica do dados.js -------
+js/dados.js.tmp
+
 # --- Editores -----------------------------------------------------
 .vscode/
 .idea/

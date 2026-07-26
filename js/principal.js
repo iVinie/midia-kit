@@ -285,7 +285,7 @@
      FORMULÁRIO DE PROPOSTA (modal + mailto)
      Ao enviar, abre o app de e-mail da pessoa já preenchido.
      ---------------------------------------------------------------- */
-  var EMAIL_DESTINO = 'contato.iibiank@gmail.com';
+  var EMAIL_DESTINO = 'contato@iibiank.com';
 
   function ligarFormularioProposta() {
     var modal   = buscar('modalProposta');

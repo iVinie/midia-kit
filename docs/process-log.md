@@ -88,6 +88,39 @@
 - **Limitação conhecida:** `mailto:` abre o cliente de e-mail padrão do dispositivo. No celular sempre funciona; no desktop sem app de e-mail configurado (ex.: quem usa Gmail só no navegador) pode não abrir. Alternativa futura, se necessário: serviço de forms (Formspree) para enviar direto sem depender do app — aí sim viraria envio real server-side.
 - **Validação (browser):** modal abre centralizado (352×561), tema escuro correto (fundo #211B19, inputs #141110, botão enviar laranja, texto claro); `mailto:` gerado conferido — `subject=Proposta de parceria — <marca>` e corpo com os campos, acentos e quebras (%0A) corretos; fecha após enviar; console sem erros. `estilos.css?v=10`, `principal.js?v=4`.
 
+## 2026-07-26 — RPA que atualiza os números a partir do Playnest
+
+- **Objetivo:** automatizar a atualização dos dados (IG + TikTok, 7 e 28 dias) puxando do mídia kit do Playnest, sem depender das APIs oficiais/App Review.
+- **Descoberta chave:** o Playnest é Next.js e entrega TODOS os números embutidos no HTML, no `<script id="__NEXT_DATA__">` (`props.pageProps.data.data`) — confirmei que vêm no HTML cru (fetch simples, sem navegador). Campos com inteiros exatos: `instagram/tiktok.{followers, metrics.{7d,28d}, gender, age, location, trending}`.
+- **Arquivos:** `rpa/atualizar-dados.js` (o RPA), `rpa/LEIA-ME.md`. `js/dados.js` passou a ser **gerado** (cabeçalho avisa "não editar à mão").
+- **Decisão técnica:** RPA = script Node (fetch → regex extrai `__NEXT_DATA__` → `montarDados` remapeia → reescreve `js/dados.js`). Sem Playwright. Destaques = soma IG+TikTok (28d); gênero/idade viram % a partir das contagens; conteúdos = `trending` de IG + TikTok (TikTok não traz alcance/impressões/salvamentos → viram `undefined`, e o card ignora). `capa` fica vazia (thumbs do Playnest são URLs assinadas que expiram). Valida a estrutura e, em erro, **não** altera o `dados.js`.
+- **Validação:** `node rpa/atualizar-dados.js` gerou o `dados.js`; conferência cruzada com o print — destaques 27,1k/743,9k/83,9k (= 18252+8826 / 642639+101235 / 69651+14293); IG 7d 157,2k impressões e 16,7k curtidas batem. Site local recarregado: destaques, métricas das 2 redes/2 períodos, 7 faixas, 5 cidades e 6+6 conteúdos renderizando; console sem erros. Backup do `dados.js` anterior salvo no scratchpad.
+- **Só mexe em números.** Bio/nichos/e-mail seguem no `index.html`, intocados.
+- **Próximo passo:** escolher agendamento (Task Scheduler no PC, GitHub Action, ou porto para PHP no cron da Hostinger). O RPA não precisa ir para `public_html`.
+
+## 2026-07-26 — RPA portado para PHP (cron da Hostinger)
+
+- **Objetivo:** rodar o RPA sozinho no servidor, já que o site está no Hostinger (cron roda PHP, não Node).
+- **Arquivos:** `rpa/atualizar-dados.php` (porte 1:1 do `.js`), `rpa/LEIA-ME.md` (instruções de cron), `.gitignore` (ignora `js/dados.js.tmp`).
+- **Decisão técnica:** mesmo pipeline (cURL → regex `__NEXT_DATA__` → `montarDados` → escreve `js/dados.js`). Gravação **atômica** (`.tmp` + `rename`) pra nunca deixar o `dados.js` corrompido no meio de um cron. Trava de acesso: só CLI (cron); via URL exige `?token=` (constante `TOKEN_SECRETO`, precisa ser trocada). `encerrarComErro` tolera web (sem `STDERR`) e CLI.
+- **Validação:** NÃO consegui executar PHP localmente (sem PHP no PATH; Docker Desktop não subiu a tempo; download de PHP portátil não resolveu). Fiz revisão linha a linha; a lógica é idêntica ao `.js` já testado com dados reais. Corrigi 1 bug encontrado na revisão: uso de `STDERR` quebraria no disparo via web. **Pendente: teste no próprio servidor** (rodar 1x pelo hPanel/SSH antes de agendar) — documentado no LEIA-ME.
+- **Estrutura de pastas no Hostinger é igual à do projeto** (confirmado pela cliente), então `__DIR__ . '/../js/dados.js'` resolve certo.
+
+## 2026-07-26 — Deploy no Hostinger + cron do RPA no ar (FUNCIONANDO)
+
+- Site publicado em `iibiank.com` (Hostinger). E-mail de destino trocado para `contato@iibiank.com` (link Sobre + `EMAIL_DESTINO` no `principal.js?v=6`).
+- **Cron do RPA funcionando:** saída `[RPA] OK — js/dados.js atualizado (dados de 26/07/2026 às 19:32)...`.
+- **Pegadinha do caminho (resolvida):** o cron falhava com `Could not open input file: /home/u402181176/public_html/rpa/atualizar-dados.php`. Causa: na Hostinger o domínio fica em `domains/iibiank.com/public_html/`, mesmo o Gerenciador de Arquivos mostrando só `public_html`. Solução: modo **Personalizado** com caminho absoluto `/usr/bin/php /home/u402181176/domains/iibiank.com/public_html/rpa/atualizar-dados.php`. (Diagnóstico que fecharia a dúvida: `find /home/uXXXX -name atualizar-dados.php`.)
+- Agendamento final: `0 12 * * *` (diário, meio-dia). Testado com `* * * * *` e revertido.
+
+## 2026-07-26 — Proteção para deploy "subir a pasta inteira"
+
+- **Objetivo:** deixar seguro subir todos os arquivos ao `public_html` sem vazar internos.
+- **Arquivos:** `.htaccess` (raiz), `rpa/.htaccess`.
+- **Decisão:** `rpa/.htaccess` nega web à pasta do RPA (cron/CLI não é afetado). `.htaccess` da raiz faz `RedirectMatch 404` em `/.git` e `/.env` e nega (`Require all denied` com fallback 2.2) os `*.md`, `.gitignore`, `.gitattributes`, `*.bak/tmp/log` e `CLAUDE.md`. Assim, mesmo subindo tudo, só o site fica acessível.
+- **Riscos avaliados:** o RPA não guarda credencial (raspagem de página pública), então não há segredo a vazar; o item crítico de deploy é não expor a pasta `.git` — coberto pelo `.htaccess` (e recomendado nem subir). Docs internos ficam 403.
+- **Nota:** `imagens/_extras/` deve ir para o servidor — contém a foto do banner (`foto-moto-paisagem.webp`) e o favicon (`fav.webp`), além de arquivos não usados.
+
 ---
 
 **Antes/depois:** antes, o mídia kit só existia dentro do Playnest — URL de terceiro, sem domínio próprio, sem controle sobre layout e sem como registrar a marca dela na apresentação para as agências. Depois, existe um site autônomo com a mesma paleta e os mesmos números, responsivo do celular ao desktop, com abas de rede e filtro de período funcionando, que ela publica em qualquer hospedagem barata por FTP e atualiza editando um único arquivo de números — e que já está estruturado para receber a integração com as APIs do Instagram e do TikTok sem refazer o front.

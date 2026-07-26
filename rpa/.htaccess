@@ -1,0 +1,17 @@
+# Bloqueia o acesso via NAVEGADOR a tudo nesta pasta (o RPA).
+# O cron (linha de comando / PHP CLI) NÃO é afetado — continua rodando normal.
+# Efeito: https://SEU-DOMINIO/rpa/... responde 403 (Proibido).
+#
+# Se um dia você quiser disparar o script pela URL (com ?token=...),
+# apague este arquivo e configure o TOKEN_SECRETO no atualizar-dados.php.
+
+# Apache 2.4 / LiteSpeed (Hostinger)
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+
+# Apache 2.2 (fallback)
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>
