@@ -36,6 +36,58 @@
 - **Validação:** conferido que nenhum padrão casa com `index.html`, `css/`, `js/` ou `imagens/`.
 - **Próximo passo:** rodar `git init` na pasta quando for versionar (o vault hoje não é repositório).
 
+## 2026-07-24 — Ícones (webp) e favicon/foto de perfil
+
+- **Objetivo:** colocar na página os ícones do mídia kit original, que a cliente subiu em `.webp`, nos mesmos lugares; usar a foto do perfil (@) como favicon.
+- **Arquivos:** `index.html`, `css/estilos.css`, `js/principal.js`, `imagens/**` (renomeados), `imagens/icones/ICONES.md`.
+- **Levantamento:** o original usa Font Awesome (SVG inline). Mapeei ícone→rótulo via script no site (`svg.fa-*` + texto do card mais próximo). Os arquivos chegaram com nomes automáticos (`imgi_N_default.webp`); montei uma folha de contato HTML e identifiquei cada um por screenshot, depois renomeei para PT-BR e movi para `imagens/icones/`. Duplicados (setas do carrossel, versões repetidas em vermelho) e 2 fotos extras foram para `imagens/_extras/`.
+- **Decisões técnicas:**
+  - **Recolorir por CSS (`mask-image` + `background:currentColor`)** em vez de `<img>`. Os webp são monocromáticos com fundo transparente (confirmei alpha=0 via canvas); assim o mesmo arquivo serve em qualquer contexto e a cor sai do `:root` — aba ativa fica branco, rótulo fica vermelho, título fica laranja, tudo sem arquivo duplicado. Reproduz o comportamento do original (ícones tingidos por CSS).
+  - **Ícone escolhido por classe, não por caminho inline** — `.icone-<nome>` guarda o `mask-image`; o JS só concatena o nome da classe (`iconeDe(mapa, rotulo)`), mantendo o caminho num único lugar (relativo ao CSS).
+  - **Favicon = `perfil.webp`** (a foto quadrada 1080 do @, a da moto) e a mesma vira a foto do topo. `type="image/webp"` declarado.
+  - **2 ícones ausentes** (bookmark/Salvamentos e circle-plus/Alcance) ficam sem ícone via mapeamento parcial em `ICONES_CONTEUDO` — degrada limpo, sem placeholder quebrado.
+- **Validação (browser):** 44 ícones renderizados; `mask-image` resolvido e `background-color` correto por contexto (rede #1C1C1C, aba ativa #fff, título #E54D2E, métricas/conteúdo/e-mail #CB3314); foto de perfil carregada (não caiu no placeholder); favicon = perfil.webp; console sem erros; screenshots de topo, performance e conteúdos conferidos contra o original.
+- **Resultado:** ícones nos mesmos lugares do original, na mesma cor, trocável pelo `:root`. Pendente: subir `salvamentos.webp` e `alcance-conteudo.webp`.
+- **Próximo passo:** ao receber os 2 ícones, destravar as 2 linhas em `ICONES_CONTEUDO` (`js/principal.js`) e subir `?v` do JS.
+
+## 2026-07-24 — Correção: ícones não apareciam no Chrome (file://)
+
+- **Sintoma:** aberta direto do disco (`file://`) no Chrome, a foto do perfil aparecia mas nenhum ícone.
+- **Causa:** os ícones eram `mask-image: url(imagens/icones/*.webp)`. O Chrome trata a imagem de uma máscara CSS como recurso **cross-origin** e, sob `file://` (cada arquivo é origem única), **bloqueia** a máscara — por isso `<img>` (foto) funcionava e a máscara não. Via `http://` (Hostinger) funcionaria, mas a cliente abre local.
+- **Correção:** gerado `css/icones.css` com cada ícone embutido como **data URI base64** (mesma origem → máscara nunca bloqueada). `estilos.css` perdeu as 14 regras `url(../imagens/icones/...)` (viraram comentário apontando para `icones.css`), que agora é carregado depois. Mantida a recolorização por `currentColor`.
+- **Também corrigido:** favicon com barra invertida (`imagens\_extras/fav.webp` → `/`, quebraria no Linux) e `og:image` apontando para `perfil.jpg` inexistente (→ `perfil.webp`).
+- **Regenerar `icones.css`** (após trocar/adicionar webp em `imagens/icones/`): rodar no PowerShell o script que lê cada `.webp`, converte para base64 e escreve `.icone-<nome>{mask-image:url("data:image/webp;base64,...")}` (registrado no histórico do chat). Depois subir `?v` de `icones.css` no `index.html`.
+- **Validação (browser):** `maskImage` computado agora é `url("data:image/webp;base64,...")`; nenhuma regra referencia mais `imagens/icones/*.webp` (`file://`); 44 ícones; console sem erros; screenshots conferidos. Versões: `estilos.css?v=5`, `icones.css?v=1`.
+- **Observação p/ deploy:** `icones.css` tem ~69 KB (14 ícones embutidos), mas elimina 14 requisições e resolve o `file://`. Aceitável para página única.
+
+## 2026-07-24 — Cabeçalho estilo "banner + card", enquadramento e TEMA ESCURO
+
+- **Objetivo:** (1) cabeçalho com a foto natural em banner e o perfil num card sobrepondo; (2) ajustar o enquadramento da foto; (3) converter a paleta para tema escuro.
+- **Arquivos:** `index.html`, `css/estilos.css`.
+- **Banner + card:** `.cabecalho` deixou de ter o véu coral; adicionado `.banner` (foto natural, largura total, `background-image` — que, ao contrário de `mask-image`, carrega normal via file://) e `.cartao-perfil` (card sobrepondo o banner via `margin-top` negativo). Botões de rede passaram a usar `--cor-coral-suave` (o `rgba(255,255,255,.65)` sumiria no card).
+- **Enquadramento:** `background-position` do banner de `center 28%/24%` → `center 48%/46%` para centralizar o piloto (a foto é retrato; o banner é faixa larga, então o Y% escolhe a faixa vertical visível).
+- **Tema escuro (via `:root`):** os papéis de `--cor-branco` e `--cor-preto` foram **invertidos** — `--cor-branco` virou a superfície escura dos cards (#211B19) e `--cor-preto` virou o texto claro (#F2EDEB); `--cor-fundo` #141110. Assim ~20 regras de card/texto viraram dark sem edição individual. Adicionada `--cor-clara` (#FFFFFF) para os poucos pontos de branco real sobre laranja (aba ativa, selo REELS, CTA, rodapé). Números em `--cor-vermelho-texto` clareados para #FF9068 (contraste no escuro); `--cor-borda` virou `rgba(255,255,255,.08)`; grafico-3 ("Outros") para tom quente discreto; sombra mais forte.
+- **Impressão:** `@media print` agora reprograma o `:root` de volta ao claro (fundo branco, texto escuro) — o dark gastaria tinta e ficaria ilegível no papel; banner com `print-color-adjust: exact`.
+- **Validação (browser):** computados conferidos — página #141110, cards #211B19, texto #F2EDEB, número #FF9068, aba ativa branca, rodapé #0F0C0B/texto branco; grep confirmou nenhuma cor clara hardcoded fora do `:root`/print; screenshots de topo, Performance, Público e tabela no escuro; console sem erros. `estilos.css?v=9`.
+- **Nota de sincronia:** a cliente vinha editando/vendo uma versão escura própria (números 26,8k etc.) enquanto o arquivo em disco estava claro. Ela confirmou "só queria o enquadramento" e depois pediu o tema escuro — agora o arquivo em disco é a versão oficial escura.
+
+## 2026-07-24 — Ícones faltantes (Salvamentos e Alcance) adicionados
+
+- **Objetivo:** completar os 2 ícones que faltavam nos cards de conteúdo.
+- **A cliente subiu** `imgi_23`/`imgi_24` em `imagens/`. Identifiquei: 23 = bookmark, 24 = circle-plus. Movidos e renomeados para `icones/salvamentos.webp` e `icones/alcance-conteudo.webp` (nome distinto do `alcance.webp`/raio da Performance).
+- **Ligados** em `ICONES_CONTEUDO` (`js/principal.js`): `Salvamentos→salvamentos`, `Alcance→alcance-conteudo`.
+- **Regenerado** `css/icones.css` (agora 16 classes, ~83 KB). Versões: `icones.css?v=2`, `principal.js?v=3`.
+- **Validação:** os 2 rótulos passaram a ter `.icone` com máscara data URI e cor coral; screenshot do card confirma os 7 metrics com ícone; console sem erros.
+- **Conjunto de ícones agora COMPLETO** (16). Nada pendente.
+
+## 2026-07-24 — Formulário de proposta (modal → mailto)
+
+- **Objetivo:** ao clicar em "Enviar proposta por e-mail", abrir um formulário na própria página; ao enviar, abrir o app de e-mail da pessoa já preenchido (destinatário, assunto, corpo).
+- **Arquivos:** `index.html` (botão vira `<button>` + `<dialog>` do formulário), `css/estilos.css` (estilos do modal), `js/principal.js` (`ligarFormularioProposta`).
+- **Decisão técnica:** `mailto:` montado no cliente a partir do `FormData` (nome, marca, tipo, mensagem) com `encodeURIComponent` — **zero backend**, roda em Hostinger/GitHub Pages. `<dialog>` nativo (`showModal`) com fallback para atributo `open`; fecha no ×, Cancelar, clique no fundo e ESC. E-mail destino numa constante (`EMAIL_DESTINO`).
+- **Limitação conhecida:** `mailto:` abre o cliente de e-mail padrão do dispositivo. No celular sempre funciona; no desktop sem app de e-mail configurado (ex.: quem usa Gmail só no navegador) pode não abrir. Alternativa futura, se necessário: serviço de forms (Formspree) para enviar direto sem depender do app — aí sim viraria envio real server-side.
+- **Validação (browser):** modal abre centralizado (352×561), tema escuro correto (fundo #211B19, inputs #141110, botão enviar laranja, texto claro); `mailto:` gerado conferido — `subject=Proposta de parceria — <marca>` e corpo com os campos, acentos e quebras (%0A) corretos; fecha após enviar; console sem erros. `estilos.css?v=10`, `principal.js?v=4`.
+
 ---
 
 **Antes/depois:** antes, o mídia kit só existia dentro do Playnest — URL de terceiro, sem domínio próprio, sem controle sobre layout e sem como registrar a marca dela na apresentação para as agências. Depois, existe um site autônomo com a mesma paleta e os mesmos números, responsivo do celular ao desktop, com abas de rede e filtro de período funcionando, que ela publica em qualquer hospedagem barata por FTP e atualiza editando um único arquivo de números — e que já está estruturado para receber a integração com as APIs do Instagram e do TikTok sem refazer o front.

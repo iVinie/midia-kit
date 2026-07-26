@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mídia Kit — Bianca Marques Rodrigues</title>
-  <meta name="description" content="Mídia kit da creator Bianca Marques Rodrigues (@iibiank) — lifestyle, veículos e humor. Métricas de Instagram e TikTok, público e conteúdos em alta.">
+  <title>Mídia Kit Bianca Marques Rodrigues</title>
+  <meta name="description" content="Mídia kit da creator Bianca Marques Rodrigues (@iibiank) lifestyle, veículos, humor e Fitness. Métricas de Instagram e TikTok, público e conteúdos em alta.">
 
   <!-- FASE DE APROVAÇÃO: mantém a página fora do Google enquanto a Bianca revisa.
        Quando ela aprovar e o kit for divulgado, APAGUE a linha abaixo
@@ -15,31 +15,36 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Mídia Kit — Bianca Marques Rodrigues">
   <meta property="og:description" content="26,1k seguidores · 717,2k impressões nos últimos 28 dias. Lifestyle, veículos e humor.">
-  <meta property="og:image" content="imagens/perfil.jpg">
+  <meta property="og:image" content="imagens/perfil.webp">
 
-  <link rel="icon" href="imagens/favicon.png">
+  <link rel="icon" type="image/webp" href="imagens/_extras/fav.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">
   <!-- O "?v=1" força o navegador a baixar a versão nova depois de subir o arquivo.
        Ao atualizar css/js/dados, troque para ?v=2, ?v=3 ... -->
-  <link rel="stylesheet" href="css/estilos.css?v=3">
+  <link rel="stylesheet" href="css/estilos.css?v=10">
+  <link rel="stylesheet" href="css/icones.css?v=2">
 </head>
 <body>
 
   <!-- ============ CABEÇALHO / APRESENTAÇÃO ============ -->
   <header class="cabecalho" id="cabecalho">
+
+    <!-- Banner: foto em cor natural, ocupa a largura toda -->
+    <div class="banner" role="img" aria-label="Bianca em sua moto na estrada"></div>
+
     <div class="container">
 
-      <div class="perfil">
-        <img class="perfil__foto" id="fotoPerfil" src="imagens/perfil.jpg" alt="Foto de Bianca Marques Rodrigues"
+      <div class="perfil cartao-perfil">
+        <img class="perfil__foto" id="fotoPerfil" src="imagens/perfil.webp" alt="Foto de Bianca Marques Rodrigues"
              onerror="this.classList.add('perfil__foto--vazia')">
         <div class="perfil__identificacao">
           <h1 class="perfil__nome">Bianca Marques Rodrigues</h1>
           <p class="perfil__local">Recife | PE</p>
           <div class="perfil__redes">
-            <a class="botao-rede" href="https://instagram.com/iibiank" target="_blank" rel="noopener">Instagram</a>
-            <a class="botao-rede" href="https://tiktok.com/@iibiank" target="_blank" rel="noopener">TikTok</a>
+            <a class="botao-rede" href="https://instagram.com/iibiank" target="_blank" rel="noopener"><span class="icone icone-instagram" aria-hidden="true"></span>Instagram</a>
+            <a class="botao-rede" href="https://tiktok.com/@iibiank" target="_blank" rel="noopener"><span class="icone icone-tiktok" aria-hidden="true"></span>TikTok</a>
           </div>
         </div>
       </div>
@@ -86,19 +91,19 @@
 
         <div class="sobre__contato">
           <span class="sobre__rotulo-contato">E-mail para parcerias</span>
-          <a class="sobre__email" href="mailto:contato.iibiank@gmail.com">contato.iibiank@gmail.com</a>
+          <a class="sobre__email" href="mailto:contato.iibiank@gmail.com" data-abrir-proposta><span class="icone icone-email" aria-hidden="true"></span>contato.iibiank@gmail.com</a>
         </div>
       </div>
     </section>
 
     <!-- ============ DESEMPENHO ============ -->
     <section class="secao" id="desempenho" aria-labelledby="tituloDesempenho">
-      <h2 class="secao__titulo" id="tituloDesempenho">Performance</h2>
+      <h2 class="secao__titulo" id="tituloDesempenho"><span class="icone icone-performance" aria-hidden="true"></span>Performance</h2>
 
       <!-- Seletor de rede social -->
       <div class="abas-redes" role="tablist" aria-label="Escolher rede social">
-        <button class="aba aba--ativa" role="tab" aria-selected="true"  data-rede="instagram" id="abaInstagram">Instagram</button>
-        <button class="aba"            role="tab" aria-selected="false" data-rede="tiktok"    id="abaTiktok">TikTok</button>
+        <button class="aba aba--ativa" role="tab" aria-selected="true"  data-rede="instagram" id="abaInstagram"><span class="icone icone-instagram" aria-hidden="true"></span>Instagram</button>
+        <button class="aba"            role="tab" aria-selected="false" data-rede="tiktok"    id="abaTiktok"><span class="icone icone-tiktok" aria-hidden="true"></span>TikTok</button>
       </div>
 
       <!-- Seletor de período -->
@@ -115,7 +120,7 @@
 
     <!-- ============ PÚBLICO (dados do Instagram) ============ -->
     <section class="secao" id="publico" aria-labelledby="tituloPublico">
-      <h2 class="secao__titulo" id="tituloPublico">Público</h2>
+      <h2 class="secao__titulo" id="tituloPublico"><span class="icone icone-pessoas" aria-hidden="true"></span>Público</h2>
 
       <div class="grade-publico">
 
@@ -158,7 +163,7 @@
 
     <!-- ============ CONTEÚDOS EM ALTA ============ -->
     <section class="secao" id="conteudos" aria-labelledby="tituloConteudos">
-      <h2 class="secao__titulo" id="tituloConteudos">Conteúdos em alta</h2>
+      <h2 class="secao__titulo" id="tituloConteudos"><span class="icone icone-conteudos" aria-hidden="true"></span>Conteúdos em alta</h2>
       <div class="grade-conteudos" id="gradeConteudos"></div>
     </section>
 
@@ -170,12 +175,61 @@
         Me chama que eu monto uma proposta sob medida para a sua marca.
       </p>
       <div class="chamada-final__acoes">
-        <a class="botao-principal" href="mailto:contato.iibiank@gmail.com?subject=Proposta%20de%20parceria">Enviar proposta por e-mail</a>
+        <button type="button" class="botao-principal" data-abrir-proposta>Enviar proposta por e-mail</button>
         <a class="botao-secundario" href="https://instagram.com/iibiank" target="_blank" rel="noopener">Chamar no Instagram</a>
       </div>
     </section>
 
   </main>
+
+  <!-- ============ FORMULÁRIO DE PROPOSTA (modal) ============
+       Ao enviar, monta um link mailto: e abre o app de e-mail da pessoa
+       já com destinatário, assunto e corpo preenchidos. Sem servidor. -->
+  <dialog class="modal-proposta" id="modalProposta" aria-labelledby="tituloFormulario">
+    <form class="formulario" id="formularioProposta" method="dialog">
+      <div class="formulario__topo">
+        <h2 class="formulario__titulo" id="tituloFormulario">Enviar proposta</h2>
+        <button type="button" class="formulario__fechar" id="fecharFormulario" aria-label="Fechar">&times;</button>
+      </div>
+
+      <p class="formulario__ajuda">
+        Preencha e clique em enviar — abre seu app de e-mail com tudo escrito.
+        Você só confirma o envio.
+      </p>
+
+      <label class="campo">
+        <span class="campo__rotulo">Seu nome <em>*</em></span>
+        <input class="campo__entrada" type="text" name="nome" required autocomplete="name" placeholder="Como você se chama">
+      </label>
+
+      <label class="campo">
+        <span class="campo__rotulo">Marca / empresa <em>*</em></span>
+        <input class="campo__entrada" type="text" name="marca" required autocomplete="organization" placeholder="Nome da marca">
+      </label>
+
+      <label class="campo">
+        <span class="campo__rotulo">Tipo de parceria</span>
+        <select class="campo__entrada" name="tipo">
+          <option value="Publipost">Publipost</option>
+          <option value="Reels">Reels</option>
+          <option value="Stories">Stories</option>
+          <option value="Presença em evento">Presença em evento</option>
+          <option value="Campanha de longo prazo">Campanha de longo prazo</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </label>
+
+      <label class="campo">
+        <span class="campo__rotulo">Mensagem <em>*</em></span>
+        <textarea class="campo__entrada" name="mensagem" rows="4" required placeholder="Conte o que você tem em mente: produto, datas, orçamento..."></textarea>
+      </label>
+
+      <div class="formulario__acoes">
+        <button type="button" class="botao-cancelar" id="cancelarFormulario">Cancelar</button>
+        <button type="submit" class="botao-enviar">Enviar por e-mail</button>
+      </div>
+    </form>
+  </dialog>
 
   <footer class="rodape">
     <div class="container">
@@ -185,6 +239,6 @@
   </footer>
 
   <script src="js/dados.js?v=1"></script>
-  <script src="js/principal.js?v=1"></script>
+  <script src="js/principal.js?v=5"></script>
 </body>
 </html>

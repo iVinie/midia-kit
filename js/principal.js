@@ -23,6 +23,28 @@
     '28dias': 'Últimos 28 dias'
   };
 
+  /* Rótulo da métrica -> nome do ícone (arquivo em imagens/icones/).
+     Rótulo sem entrada aqui simplesmente não recebe ícone. */
+  var ICONES_METRICA = {
+    'Seguidores':            'pessoas',
+    'Impressões':            'visualizacoes',
+    'Curtidas':              'curtidas',
+    'Alcance médio':         'alcance',
+    'Alcance total':         'alcance',
+    'Engajamento dos posts': 'engajamento-posts',
+    'Engajamento médio':     'engajamento'
+  };
+
+  var ICONES_CONTEUDO = {
+    'Views':        'visualizacoes',
+    'Curtidas':     'curtidas',
+    'Comentários':  'comentarios',
+    'Compart.':     'compartilhamentos',
+    'Engajamento':  'engajamento',
+    'Salvamentos':  'salvamentos',       // bookmark
+    'Alcance':      'alcance-conteudo'    // circle-plus (distinto do 'alcance'/raio da Performance)
+  };
+
   /* ----------------------------------------------------------------
      FUNÇÕES AUXILIARES
      ---------------------------------------------------------------- */
@@ -47,6 +69,12 @@
 
   function buscar(id) {
     return document.getElementById(id);
+  }
+
+  /** Devolve o <span> do ícone para um rótulo, ou '' se não houver mapeamento. */
+  function iconeDe(mapa, rotulo) {
+    var nome = mapa[rotulo];
+    return nome ? '<span class="icone icone-' + nome + '" aria-hidden="true"></span>' : '';
   }
 
   /* ----------------------------------------------------------------
@@ -77,7 +105,7 @@
       var mostrarPeriodo = metrica.rotulo.toLowerCase() !== 'seguidores';
       return (
         '<div class="cartao-metrica">' +
-          '<span class="cartao-metrica__rotulo">' + metrica.rotulo + '</span>' +
+          '<span class="cartao-metrica__rotulo">' + iconeDe(ICONES_METRICA, metrica.rotulo) + metrica.rotulo + '</span>' +
           '<span class="cartao-metrica__valor">' + formatarNumero(metrica.valor) + '</span>' +
           (mostrarPeriodo
             ? '<span class="cartao-metrica__periodo">' + rotuloPeriodo[periodoSelecionado] + '</span>'
@@ -184,7 +212,7 @@
         if (typeof linha.valor !== 'number') return '';
         return (
           '<div class="metrica-conteudo' + (linha.destaque ? ' metrica-conteudo--destaque' : '') + '">' +
-            '<span class="metrica-conteudo__rotulo">' + linha.rotulo + '</span>' +
+            '<span class="metrica-conteudo__rotulo">' + iconeDe(ICONES_CONTEUDO, linha.rotulo) + linha.rotulo + '</span>' +
             '<span class="metrica-conteudo__valor">' + formatarNumero(linha.valor) + '</span>' +
           '</div>'
         );
@@ -253,6 +281,73 @@
   /* ----------------------------------------------------------------
      INÍCIO
      ---------------------------------------------------------------- */
+  /* ----------------------------------------------------------------
+     FORMULÁRIO DE PROPOSTA (modal + mailto)
+     Ao enviar, abre o app de e-mail da pessoa já preenchido.
+     ---------------------------------------------------------------- */
+  var EMAIL_DESTINO = 'contato.iibiank@gmail.com';
+
+  function ligarFormularioProposta() {
+    var modal   = buscar('modalProposta');
+    var fechar  = buscar('fecharFormulario');
+    var cancelar= buscar('cancelarFormulario');
+    var form    = buscar('formularioProposta');
+    // Qualquer elemento com data-abrir-proposta abre o modal (botão da CTA, e-mail...)
+    var gatilhos = document.querySelectorAll('[data-abrir-proposta]');
+    if (!modal || !form || !gatilhos.length) return;
+
+    // <dialog> nativo: usa showModal() quando existe; senão, cai num atributo
+    function abrirModal() {
+      if (typeof modal.showModal === 'function') modal.showModal();
+      else modal.setAttribute('open', '');
+    }
+    function fecharModal() {
+      if (typeof modal.close === 'function') modal.close();
+      else modal.removeAttribute('open');
+    }
+
+    gatilhos.forEach(function (g) {
+      g.addEventListener('click', function (e) {
+        e.preventDefault();   // se for o link de e-mail, ignora o mailto e abre o modal
+        abrirModal();
+      });
+    });
+    if (fechar)   fechar.addEventListener('click', fecharModal);
+    if (cancelar) cancelar.addEventListener('click', fecharModal);
+
+    // Clicar fora do formulário (no fundo escuro) fecha
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) fecharModal();
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var dados = new FormData(form);
+      var nome  = (dados.get('nome')     || '').trim();
+      var marca = (dados.get('marca')    || '').trim();
+      var tipo  = (dados.get('tipo')     || '').trim();
+      var msg   = (dados.get('mensagem') || '').trim();
+
+      var assunto = 'Proposta de parceria' + (marca ? ' — ' + marca : (nome ? ' — ' + nome : ''));
+
+      var corpo =
+        'Olá, Bianca!\n\n' +
+        'Nome: ' + nome + '\n' +
+        (marca ? 'Marca/empresa: ' + marca + '\n' : '') +
+        'Tipo de parceria: ' + tipo + '\n\n' +
+        'Mensagem:\n' + msg + '\n';
+
+      var url = 'mailto:' + EMAIL_DESTINO +
+                '?subject=' + encodeURIComponent(assunto) +
+                '&body='    + encodeURIComponent(corpo);
+
+      // Abre o app de e-mail da pessoa com tudo preenchido
+      window.location.href = url;
+      fecharModal();
+    });
+  }
+
   function iniciar() {
     montarDestaques();
     montarMetricas();
@@ -262,6 +357,7 @@
     montarConteudos();
     ligarAbasDeRede();
     ligarFiltroDePeriodo();
+    ligarFormularioProposta();
   }
 
   if (document.readyState === 'loading') {

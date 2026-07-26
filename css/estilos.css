@@ -7,28 +7,32 @@
    1. CORES E MEDIDAS  —  altere aqui para mudar o visual do site todo
    ------------------------------------------------------------------ */
 :root {
-  /* Cores da marca */
-  --cor-coral:            #FD9E8A;   /* fundo do topo e destaques */
-  --cor-coral-suave:      rgba(253, 158, 138, 0.19);
-  --cor-laranja:          #E54D2E;   /* botões e barras */
-  --cor-laranja-claro:    #EF6144;
-  --cor-laranja-escuro:   #D83F1F;   /* estado :hover dos botões */
-  --cor-vermelho-texto:   #CB3314;   /* números em destaque */
-  --cor-vermelho-escuro:  #AF2B10;
+  /* ---- TEMA ESCURO ----
+     Para voltar ao claro: --cor-fundo/-branco claros e --cor-preto/-texto escuros. */
 
-  /* Neutros */
-  --cor-preto:            #1C1C1C;
-  --cor-branco:           #FFFFFF;
-  --cor-fundo:            #FAF8F8;
-  --cor-texto:            #1C1C1C;
-  --cor-texto-suave:      #706B76;
-  --cor-cinza-claro:      #BBBBBB;
-  --cor-borda:            #EEEEEE;
+  /* Cores da marca (acentos sobre o fundo escuro) */
+  --cor-coral:            #FD9E8A;
+  --cor-coral-suave:      rgba(253, 158, 138, 0.16);   /* fundo translúcido de etiquetas/botões */
+  --cor-laranja:          #E54D2E;   /* botões, barras, ícones de título */
+  --cor-laranja-claro:    #EF6144;
+  --cor-laranja-escuro:   #D83F1F;
+  --cor-vermelho-texto:   #FF9068;   /* números em destaque (claro p/ brilhar no escuro) */
+  --cor-vermelho-escuro:  #F0764E;   /* local, etiquetas, hover */
+
+  /* Neutros — no tema escuro os papéis se invertem: */
+  --cor-preto:            #F2EDEB;   /* AGORA é o TEXTO claro (títulos, valores) */
+  --cor-branco:           #211B19;   /* AGORA é a SUPERFÍCIE dos cards */
+  --cor-clara:            #FFFFFF;    /* branco de verdade (texto sobre laranja) */
+  --cor-fundo:            #141110;    /* fundo da página, mais escuro que o card */
+  --cor-texto:            #F2EDEB;
+  --cor-texto-suave:      #B4A9A4;    /* textos secundários */
+  --cor-cinza-claro:      #6E6560;    /* textos bem discretos */
+  --cor-borda:            rgba(255, 255, 255, 0.08);
 
   /* Cores dos gráficos (fatias de gênero, na ordem) */
   --cor-grafico-1:        #E54D2E;
   --cor-grafico-2:        #FD9E8A;
-  --cor-grafico-3:        #F5D0C6;
+  --cor-grafico-3:        #6E524B;   /* "Outros" — tom quente discreto no escuro */
 
   /* Tipografia */
   --fonte-principal: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -39,7 +43,7 @@
   --raio-grande:   24px;
   --espaco:        16px;
   --largura-maxima: 1080px;
-  --sombra-cartao: 0 1px 2px rgba(28, 28, 28, 0.04), 0 8px 24px rgba(28, 28, 28, 0.05);
+  --sombra-cartao: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 30px rgba(0, 0, 0, 0.40);
 }
 
 /* ------------------------------------------------------------------
@@ -81,10 +85,30 @@ a { color: var(--cor-vermelho-texto); }
    3. CABEÇALHO
    ------------------------------------------------------------------ */
 .cabecalho {
-  background: linear-gradient(160deg, var(--cor-coral) 0%, #FFC3B4 100%);
-  padding: 40px 0 32px;
-  border-bottom-left-radius: var(--raio-grande);
-  border-bottom-right-radius: var(--raio-grande);
+  padding-bottom: 8px;
+}
+
+/* Banner: foto em cor natural, largura total. A altura mostra a parte de
+   cima da foto; o card de perfil sobe por cima da parte de baixo.
+   background-image (diferente de mask-image) carrega normal via file://. */
+.banner {
+  height: 200px;
+  background-color: var(--cor-coral);           /* fallback se a foto faltar */
+  background-image: url('../imagens/_extras/foto-moto-paisagem.webp');
+  background-size: cover;
+  background-position: center 48%;   /* centraliza o piloto/moto no banner */
+  background-repeat: no-repeat;
+}
+
+/* Card do perfil sobrepondo o banner */
+.cartao-perfil {
+  position: relative;
+  z-index: 1;
+  margin-top: -64px;                            /* sobe por cima do banner */
+  background-color: var(--cor-branco);
+  border-radius: var(--raio-grande);
+  box-shadow: var(--sombra-cartao);
+  padding: 24px;
 }
 
 .perfil {
@@ -136,7 +160,7 @@ a { color: var(--cor-vermelho-texto); }
 }
 
 .botao-rede {
-  background-color: rgba(255, 255, 255, 0.65);
+  background-color: var(--cor-coral-suave);   /* visível sobre o card branco */
   color: var(--cor-preto);
   text-decoration: none;
   font-size: 0.82rem;
@@ -145,7 +169,7 @@ a { color: var(--cor-vermelho-texto); }
   border-radius: 999px;
   transition: background-color 0.15s ease;
 }
-.botao-rede:hover { background-color: var(--cor-branco); }
+.botao-rede:hover { background-color: rgba(253, 158, 138, 0.32); }
 
 /* Cartões de número no topo */
 .destaques {
@@ -290,9 +314,9 @@ a { color: var(--cor-vermelho-texto); }
 
 .aba--ativa {
   background-color: var(--cor-laranja);
-  color: var(--cor-branco);
+  color: var(--cor-clara);
 }
-.aba--ativa:hover { color: var(--cor-branco); }
+.aba--ativa:hover { color: var(--cor-clara); }
 
 .filtro-periodo {
   display: flex;
@@ -519,7 +543,7 @@ a { color: var(--cor-vermelho-texto); }
 
 .cartao-conteudo__formato {
   background-color: var(--cor-laranja);
-  color: var(--cor-branco);
+  color: var(--cor-clara);
   font-size: 0.62rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -583,7 +607,7 @@ a { color: var(--cor-vermelho-texto); }
    ------------------------------------------------------------------ */
 .chamada-final {
   background: linear-gradient(160deg, var(--cor-laranja) 0%, var(--cor-laranja-claro) 100%);
-  color: var(--cor-branco);
+  color: var(--cor-clara);
   border-radius: var(--raio-grande);
   padding: 32px 24px;
   text-align: center;
@@ -619,20 +643,20 @@ a { color: var(--cor-vermelho-texto); }
 }
 
 .botao-principal {
-  background-color: var(--cor-branco);
-  color: var(--cor-vermelho-texto);
+  background-color: var(--cor-clara);        /* botão branco sobre a faixa laranja */
+  color: var(--cor-laranja-escuro);          /* texto escuro p/ contraste no branco */
 }
 .botao-principal:hover { background-color: #FFF3F0; }
 
 .botao-secundario {
   border: 2px solid rgba(255, 255, 255, 0.7);
-  color: var(--cor-branco);
+  color: var(--cor-clara);
 }
 .botao-secundario:hover { background-color: rgba(255, 255, 255, 0.15); }
 
 .rodape {
-  background-color: var(--cor-preto);
-  color: var(--cor-branco);
+  background-color: #0F0C0B;                  /* rodapé bem escuro */
+  color: var(--cor-clara);
   padding: 28px 0;
   text-align: center;
   font-size: 0.85rem;
@@ -662,6 +686,157 @@ a { color: var(--cor-vermelho-texto); }
   font-size: 0.82rem;
 }
 
+/* ------------------------------------------------------------------
+   SISTEMA DE ÍCONES
+   Os arquivos em imagens/icones/ são webp monocromáticos com fundo
+   transparente. A cor NÃO vem do arquivo: é pintada aqui via CSS
+   (mask + currentColor), então trocar a cor da marca no :root muda
+   todos os ícones de uma vez, e o mesmo ícone serve em contextos de
+   cores diferentes (ex.: branco na aba ativa, vermelho no rótulo).
+   ------------------------------------------------------------------ */
+.icone {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;          /* a cor vem do texto ao redor */
+  vertical-align: -0.125em;
+  flex-shrink: 0;
+  -webkit-mask-repeat: no-repeat;  mask-repeat: no-repeat;
+  -webkit-mask-position: center;   mask-position: center;
+  -webkit-mask-size: contain;      mask-size: contain;
+}
+
+/* As máscaras de cada ícone (.icone-<nome>) ficam em css/icones.css,
+   embutidas como data URI. Isso é obrigatório para funcionar quando a
+   página é aberta direto do disco (file://) no Chrome — ver icones.css. */
+
+/* --- Ícone dentro do botão de rede (topo) --- */
+.botao-rede { display: inline-flex; align-items: center; gap: 7px; }
+.botao-rede .icone { width: 15px; height: 15px; }
+
+/* --- Ícone dentro das abas Instagram/TikTok --- */
+.aba { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.aba .icone { width: 16px; height: 16px; }
+
+/* --- Ícone no título da seção (Performance, Público, Conteúdos) --- */
+.secao__titulo { display: flex; align-items: center; gap: 10px; }
+.secao__titulo .icone { width: 1em; height: 1em; color: var(--cor-laranja); }
+
+/* --- Ícone no rótulo de cada métrica de Performance --- */
+.cartao-metrica__rotulo { display: inline-flex; align-items: center; gap: 6px; }
+.cartao-metrica__rotulo .icone { width: 13px; height: 13px; color: var(--cor-vermelho-texto); }
+
+/* --- Ícone no rótulo das métricas dos cards de conteúdo --- */
+.metrica-conteudo__rotulo { display: inline-flex; align-items: center; gap: 5px; }
+.metrica-conteudo__rotulo .icone { width: 12px; height: 12px; color: var(--cor-vermelho-texto); }
+
+/* --- Ícone de envelope junto ao e-mail --- */
+.sobre__email { display: inline-flex; align-items: center; gap: 7px; }
+.sobre__email .icone { width: 14px; height: 14px; color: var(--cor-vermelho-texto); }
+
+/* ------------------------------------------------------------------
+   MODAL DE PROPOSTA (formulário -> mailto)
+   ------------------------------------------------------------------ */
+.modal-proposta {
+  width: min(92vw, 460px);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-grande);
+  background-color: var(--cor-branco);        /* superfície do card (escura no tema) */
+  color: var(--cor-texto);
+  padding: 0;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+/* Fundo escurecido atrás do modal */
+.modal-proposta::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.formulario { padding: 22px; display: grid; gap: 14px; }
+
+.formulario__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.formulario__titulo { font-size: 1.25rem; font-weight: 800; }
+
+.formulario__fechar {
+  border: none;
+  background: transparent;
+  color: var(--cor-texto-suave);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: var(--raio-pequeno);
+}
+.formulario__fechar:hover { color: var(--cor-texto); }
+
+.formulario__ajuda {
+  font-size: 0.82rem;
+  color: var(--cor-texto-suave);
+  margin-top: -4px;
+}
+
+.campo { display: grid; gap: 6px; }
+.campo__rotulo {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--cor-texto-suave);
+}
+.campo__rotulo em { color: var(--cor-vermelho-texto); font-style: normal; }
+
+.campo__entrada {
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: var(--cor-texto);
+  background-color: var(--cor-fundo);          /* mais escuro que o card */
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-medio);
+  padding: 11px 12px;
+  width: 100%;
+  resize: vertical;
+}
+.campo__entrada::placeholder { color: var(--cor-cinza-claro); }
+.campo__entrada:focus {
+  outline: none;
+  border-color: var(--cor-laranja);
+  box-shadow: 0 0 0 3px var(--cor-coral-suave);
+}
+/* seta do select visível no fundo escuro */
+select.campo__entrada { appearance: none; cursor: pointer; }
+
+.formulario__acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.botao-cancelar,
+.botao-enviar {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 11px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.botao-cancelar {
+  background: transparent;
+  color: var(--cor-texto-suave);
+  border-color: var(--cor-borda);
+}
+.botao-cancelar:hover { color: var(--cor-texto); }
+.botao-enviar {
+  background-color: var(--cor-laranja);
+  color: var(--cor-clara);
+}
+.botao-enviar:hover { background-color: var(--cor-laranja-escuro); }
+
 /* Usada pelo JS para esconder a seção Público na aba TikTok */
 .oculto { display: none !important; }
 
@@ -676,13 +851,17 @@ a { color: var(--cor-vermelho-texto); }
 }
 
 @media (min-width: 900px) {
-  .cabecalho { padding: 56px 0 40px; }
+  .cabecalho { padding-bottom: 12px; }
+
+  .banner { height: 300px; background-position: center 46%; }
+
+  .cartao-perfil { margin-top: -80px; padding: 28px 32px; }
 
   .perfil {
     flex-direction: row;
     text-align: left;
     align-items: center;
-    gap: 24px;
+    gap: 28px;
   }
 
   .perfil__foto { width: 132px; height: 132px; }
@@ -701,9 +880,23 @@ a { color: var(--cor-vermelho-texto); }
   .secao__titulo { font-size: 1.5rem; }
 }
 
-/* Impressão / salvar em PDF — mídia kit costuma ser enviado por e-mail */
+/* Impressão / salvar em PDF — força um tema CLARO (o escuro gastaria tinta e
+   ficaria ilegível no papel), reprogramando as variáveis só na impressão. */
 @media print {
-  body { background: var(--cor-branco); }
+  :root {
+    --cor-preto:          #1C1C1C;   /* volta a ser texto escuro */
+    --cor-branco:         #FFFFFF;   /* volta a ser superfície clara */
+    --cor-fundo:          #FFFFFF;
+    --cor-texto:          #1C1C1C;
+    --cor-texto-suave:    #555555;
+    --cor-cinza-claro:    #999999;
+    --cor-borda:          #E5E5E5;
+    --cor-vermelho-texto: #CB3314;
+    --cor-vermelho-escuro:#AF2B10;
+    --cor-grafico-3:      #F5D0C6;
+  }
+  body { background: #FFFFFF; }
+  .banner { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .abas-redes, .filtro-periodo, .chamada-final__acoes { display: none; }
   .cartao, .cartao-metrica, .cartao-conteudo { box-shadow: none; break-inside: avoid; }
 }
