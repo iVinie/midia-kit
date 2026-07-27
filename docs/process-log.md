@@ -106,6 +106,22 @@
 - **Validação:** NÃO consegui executar PHP localmente (sem PHP no PATH; Docker Desktop não subiu a tempo; download de PHP portátil não resolveu). Fiz revisão linha a linha; a lógica é idêntica ao `.js` já testado com dados reais. Corrigi 1 bug encontrado na revisão: uso de `STDERR` quebraria no disparo via web. **Pendente: teste no próprio servidor** (rodar 1x pelo hPanel/SSH antes de agendar) — documentado no LEIA-ME.
 - **Estrutura de pastas no Hostinger é igual à do projeto** (confirmado pela cliente), então `__DIR__ . '/../js/dados.js'` resolve certo.
 
+## 2026-07-26 — Parcerias: filtrar por aba + ícone da plataforma
+
+- **Pedido:** parceria do TikTok só na aba TikTok e do Instagram só na do Instagram (não misturar); e mostrar o ícone da plataforma em cada card.
+- **Arquivos:** `js/principal.js` (`montarConteudos` volta a filtrar por `redeSelecionada`; re-render ao trocar de aba; adiciona `<span class="icone icone-instagram/tiktok cartao-conteudo__rede">` no topo do card via `conteudo.rede`), `css/estilos.css` (`.cartao-conteudo__rede`), `index.html` (`estilos.css?v=11`, `principal.js?v=8`).
+- **Validação:** aba IG mostra 6 (todas com `icone-instagram`), aba TikTok mostra 6 (todas `icone-tiktok`); console limpo; screenshot confere "REELS + ícone IG".
+- **Re-upload:** `index.html`, `js/principal.js`, `css/estilos.css`.
+
+## 2026-07-26 — "Conteúdos em alta" → "Parcerias" (manual, fora do RPA)
+
+- **Pedido:** renomear a seção para "Parcerias"; RPA deve atualizar só os dados GERAIS (destaques, Performance IG/TikTok 7d/28d, Público) — NÃO os vídeos, que a cliente gerencia à mão.
+- **Arquivos:** `index.html` (título "Parcerias"; carrega `js/parcerias.js`; `principal.js?v=7`), `js/parcerias.js` (NOVO, manual, seed com os 12 itens atuais), `js/principal.js` (`montarConteudos` lê `window.DADOS_PARCERIAS`, mostra TODAS independentemente da aba, `onerror` na capa), `rpa/atualizar-dados.php` e `.js` (removido `conteudos` + função `mapearConteudos` + logs), `.htaccess` (no-cache no `dados.js`).
+- **Decisão técnica:** desacoplar dado manual (parcerias) do automático (números). Parcerias num arquivo próprio que o RPA nunca toca → edições da cliente não são sobrescritas pelo cron. Cada parceria: rede, formato, data, capa (imagem opcional), link, metricas (opcionais).
+- **Cache do `dados.js`:** como o RPA reescreve `dados.js` diariamente sob a MESMA URL (`?v=1` fixo), o navegador poderia servir cópia velha e mostrar números defasados. Adicionado `Header Cache-Control "no-cache, must-revalidate"` só para `dados.js` no `.htaccess` (revalida sempre; resto do site segue cacheado).
+- **Validação:** `node rpa/atualizar-dados.js` gera `dados.js` SEM `conteudos` (grep=0) e não quebra; página mostra título "Parcerias", 12 cards vindos de `parcerias.js`, independentes da aba; destaques 27,1k/743,9k/83,9k; console sem erros.
+- **Re-upload necessário:** `index.html`, `js/parcerias.js`, `js/principal.js`, `rpa/atualizar-dados.php`, `.htaccess`.
+
 ## 2026-07-26 — Deploy no Hostinger + cron do RPA no ar (FUNCIONANDO)
 
 - Site publicado em `iibiank.com` (Hostinger). E-mail de destino trocado para `contato@iibiank.com` (link Sobre + `EMAIL_DESTINO` no `principal.js?v=6`).

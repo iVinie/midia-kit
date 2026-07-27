@@ -181,22 +181,25 @@
      CONTEÚDOS EM ALTA
      ---------------------------------------------------------------- */
   function montarConteudos() {
-    var rede = dados.redes[redeSelecionada];
-
-    // Mostra só os conteúdos da rede que está selecionada nas abas
-    var conteudosDaRede = dados.conteudos.filter(function (conteudo) {
-      return (conteudo.rede || '').toLowerCase() === redeSelecionada;
+    // As Parcerias vêm de js/parcerias.js (editado à mão; o RPA NÃO toca aqui).
+    // Mostra só as da rede selecionada na aba (não mistura Instagram/TikTok).
+    var parcerias = (window.DADOS_PARCERIAS || []).filter(function (p) {
+      return (p.rede || '').toLowerCase() === redeSelecionada;
     });
 
-    if (conteudosDaRede.length === 0) {
+    if (parcerias.length === 0) {
+      var nomeRede = dados.redes[redeSelecionada] ? dados.redes[redeSelecionada].nome : 'esta rede';
       buscar('gradeConteudos').innerHTML =
-        '<p class="aviso-sem-conteudo">Ainda não há conteúdos cadastrados para ' +
-        (rede ? rede.nome : 'esta rede') + '. Adicione em <code>js/dados.js</code>.</p>';
+        '<p class="aviso-sem-conteudo">Nenhuma parceria de ' + nomeRede + ' cadastrada. Adicione em <code>js/parcerias.js</code>.</p>';
       return;
     }
 
-    buscar('gradeConteudos').innerHTML = conteudosDaRede.map(function (conteudo) {
-      var m = conteudo.metricas;
+    buscar('gradeConteudos').innerHTML = parcerias.map(function (conteudo) {
+      var m = conteudo.metricas || {};
+      var redeInfo = dados.redes[(conteudo.rede || '').toLowerCase()];
+      var iconePlataforma = conteudo.rede
+        ? '<span class="icone icone-' + conteudo.rede.toLowerCase() + ' cartao-conteudo__rede" aria-label="' + conteudo.rede + '"></span>'
+        : '';
 
       var linhas = [
         { rotulo: 'Views',        valor: m.views, destaque: true },
@@ -219,13 +222,14 @@
       }).join('');
 
       var capa = conteudo.capa
-        ? '<img class="cartao-conteudo__capa" src="' + conteudo.capa + '" alt="Capa do conteúdo de ' + conteudo.data + '" loading="lazy">'
+        ? '<img class="cartao-conteudo__capa" src="' + conteudo.capa + '" alt="Capa da parceria" loading="lazy" onerror="this.remove()">'
         : '';
 
       var interno =
         '<div class="cartao-conteudo__topo">' +
           '<span class="cartao-conteudo__formato">' + conteudo.formato + '</span>' +
-          '<span class="cartao-conteudo__usuario">' + (rede ? rede.usuario : '') + '</span>' +
+          iconePlataforma +
+          '<span class="cartao-conteudo__usuario">' + (redeInfo ? redeInfo.usuario : '') + '</span>' +
           '<span class="cartao-conteudo__data">' + conteudo.data + '</span>' +
         '</div>' +
         capa +
@@ -257,7 +261,7 @@
         buscar('publico').classList.toggle('oculto', redeSelecionada !== 'instagram');
 
         montarMetricas();
-        montarConteudos();
+        montarConteudos();   // re-filtra as parcerias pela rede da aba
       });
     });
   }

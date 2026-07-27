@@ -101,25 +101,6 @@ function comSeguidores(lista, seguidores) {
   return lista.map(x => x.rotulo === 'Seguidores' ? { rotulo: 'Seguidores', valor: seguidores } : x);
 }
 
-function mapearConteudos(trending, rede, formatoPadrao) {
-  return (trending || []).map(t => ({
-    rede,
-    formato: t.type ? (t.type === 'REELS' ? 'Reels' : t.type) : formatoPadrao,
-    data: t.createdAt ? formatarDataHora(t.createdAt) : '',
-    capa: '', // as thumbs do Playnest são URLs assinadas que expiram — não usar
-    link: t.permalink || '',
-    metricas: {
-      views: t.views,
-      curtidas: t.likes,
-      comentarios: t.comments,
-      compartilhamentos: t.shares,
-      salvamentos: t.savings,          // TikTok não fornece -> vira undefined (card ignora)
-      alcance: t.reach,                // idem
-      engajamento: t.engagement
-    }
-  }));
-}
-
 function montarDados(d) {
   const ig = d.instagram, tt = d.tiktok;
 
@@ -153,11 +134,7 @@ function montarDados(d) {
     percentual: l.percentage
   }));
 
-  // -- conteúdos: Instagram + TikTok --
-  const conteudos = [
-    ...mapearConteudos(ig.trending, 'Instagram', 'Reels'),
-    ...mapearConteudos(tt.trending, 'TikTok', 'Vídeo')
-  ];
+  // OBS: o RPA NÃO gera "conteudos"/parcerias — isso é manual em js/parcerias.js.
 
   return {
     atualizadoEm: formatarDataHora(d.extractedAt),
@@ -178,8 +155,7 @@ function montarDados(d) {
         }
       }
     },
-    publico: { genero, faixasEtarias, localidades },
-    conteudos
+    publico: { genero, faixasEtarias, localidades }
   };
 }
 
@@ -213,8 +189,7 @@ window.DADOS_MIDIA_KIT = `;
     console.log(`      Destaques: ${abreviar(dados.destaques.seguidores)} seguidores · ` +
                 `${abreviar(dados.destaques.impressoes)} impressões · ` +
                 `${abreviar(dados.destaques.curtidas)} curtidas`);
-    console.log(`      Conteúdos: ${dados.conteudos.length}  ·  ` +
-                `Cidades: ${dados.publico.localidades.length}`);
+    console.log(`      Cidades: ${dados.publico.localidades.length}`);
     console.log(`\n      Lembrete: suba o js/dados.js atualizado para a hospedagem.`);
   } catch (erro) {
     console.error('\n[RPA] FALHOU:', erro.message);

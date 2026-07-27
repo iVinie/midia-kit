@@ -125,30 +125,6 @@ function metricasTiktok($m, $seguidores) {
     ];
 }
 
-function mapearConteudos($trending, $rede, $formatoPadrao) {
-    $out = [];
-    foreach (($trending ?? []) as $t) {
-        $formato = isset($t['type']) ? ($t['type'] === 'REELS' ? 'Reels' : $t['type']) : $formatoPadrao;
-        $out[] = [
-            'rede'    => $rede,
-            'formato' => $formato,
-            'data'    => isset($t['createdAt']) ? formatarDataHora($t['createdAt']) : '',
-            'capa'    => '',   // thumbs do Playnest sao URLs assinadas que expiram
-            'link'    => $t['permalink'] ?? '',
-            'metricas' => [
-                'views'             => $t['views']      ?? null,
-                'curtidas'          => $t['likes']      ?? null,
-                'comentarios'       => $t['comments']   ?? null,
-                'compartilhamentos' => $t['shares']     ?? null,
-                'salvamentos'       => $t['savings']    ?? null,  // TikTok nao fornece
-                'alcance'           => $t['reach']      ?? null,  // idem
-                'engajamento'       => $t['engagement'] ?? null,
-            ],
-        ];
-    }
-    return $out;
-}
-
 function montarDados($d) {
     $ig = $d['instagram'];
     $tt = $d['tiktok'];
@@ -186,10 +162,7 @@ function montarDados($d) {
         ];
     }
 
-    $conteudos = array_merge(
-        mapearConteudos($ig['trending'] ?? [], 'Instagram', 'Reels'),
-        mapearConteudos($tt['trending'] ?? [], 'TikTok', 'Vídeo')
-    );
+    // OBS: o RPA NÃO gera "conteudos"/parcerias — isso é manual em js/parcerias.js.
 
     return [
         'atualizadoEm' => formatarDataHora($d['extractedAt']),
@@ -211,7 +184,6 @@ function montarDados($d) {
             ],
         ],
         'publico'   => ['genero' => $genero, 'faixasEtarias' => $faixasEtarias, 'localidades' => $localidades],
-        'conteudos' => $conteudos,
     ];
 }
 
@@ -246,4 +218,4 @@ echo "[RPA] OK — js/dados.js atualizado (dados de {$dados['atualizadoEm']}).\n
 echo "      Destaques: " . abreviar($dados['destaques']['seguidores']) . " seguidores · "
    . abreviar($dados['destaques']['impressoes']) . " impressões · "
    . abreviar($dados['destaques']['curtidas']) . " curtidas\n";
-echo "      Conteúdos: " . count($dados['conteudos']) . "  ·  Cidades: " . count($dados['publico']['localidades']) . "\n";
+echo "      Cidades: " . count($dados['publico']['localidades']) . "\n";

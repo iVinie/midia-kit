@@ -30,3 +30,11 @@ RedirectMatch 404 /\.env
     Deny from all
   </IfModule>
 </Files>
+
+# --- js/dados.js é reescrito TODO DIA pelo RPA: não pode ficar em cache,
+#     senão o visitante veria números velhos. O navegador revalida sempre. ---
+<Files "dados.js">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, must-revalidate"
+  </IfModule>
+</Files>
