@@ -189,19 +189,17 @@
      ---------------------------------------------------------------- */
   function montarConteudos() {
     // As Parcerias vêm de js/parcerias.js (editado à mão; o RPA NÃO toca aqui).
-    // Mostra só as da rede selecionada na aba (não mistura Instagram/TikTok).
     var trilha = buscar('gradeConteudos');
     var bolas  = buscar('carrosselBolas');
     var dica   = buscar('carrosselDica');
 
-    var parcerias = (window.DADOS_PARCERIAS || []).filter(function (p) {
-      return (p.rede || '').toLowerCase() === redeSelecionada;
-    });
+    // Lista única: NÃO depende da aba Instagram/TikTok. Cada card mostra o
+    // logo da sua própria rede (campo "rede" em js/parcerias.js).
+    var parcerias = window.DADOS_PARCERIAS || [];
 
     if (parcerias.length === 0) {
-      var nomeRede = dados.redes[redeSelecionada] ? dados.redes[redeSelecionada].nome : 'esta rede';
       trilha.innerHTML =
-        '<p class="aviso-sem-conteudo">Nenhuma parceria de ' + nomeRede + ' cadastrada. Adicione em <code>js/parcerias.js</code>.</p>';
+        '<p class="aviso-sem-conteudo">Nenhuma parceria cadastrada. Adicione em <code>js/parcerias.js</code>.</p>';
       if (bolas) bolas.innerHTML = '';
       if (dica)  dica.style.display = 'none';
       return;
@@ -332,7 +330,7 @@
         buscar('publico').classList.toggle('oculto', redeSelecionada !== 'instagram');
 
         montarMetricas();
-        montarConteudos();   // re-filtra as parcerias pela rede da aba
+        // Parcerias são uma lista única: não dependem da aba, não re-renderizam.
       });
     });
   }

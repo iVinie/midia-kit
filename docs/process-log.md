@@ -114,6 +114,21 @@
 - **Validação:** `dados.js` carrega como `?t=<ms>`; `window.DADOS_MIDIA_KIT` OK; destaques renderizam; console sem erros/avisos (document.write de script same-origin não dispara intervention).
 - **Re-upload:** `index.html`, `.htaccess`. (Depois, limpar o cache do Hostinger 1x pra ele pegar o index.html novo; daí em diante o timestamp resolve sozinho.)
 
+## 2026-07-27 — Bug: CSS novo não aplicava no site (cache de 7 dias do Hostinger)
+
+- **Sintoma:** no site publicado os cards de Parcerias apareciam empilhados e a seta fora de lugar — visual do CSS antigo, apesar do HTML novo (setas/dica) estar presente.
+- **Diagnóstico (curl no site no ar):** os arquivos no servidor estavam CORRETOS (`estilos.css` continha `.carrossel__trilha`/`.carrossel__seta`, `principal.js` com `configurarCarrossel`, `index.html` referenciando `?v=13`/`?v=10`). O problema estava nos headers: `index.html` e `dados.js` vinham com `no-cache` (meu `.htaccess` OK), mas **`estilos.css` e `principal.js` vinham com `Cache-Control: public, max-age=604800`** — padrão do Hostinger/LiteSpeed = 7 dias travados no navegador.
+- **Correção:** `.htaccess` — trocado o `FilesMatch (index.html|dados.js)` por `FilesMatch \.(html|css|js)$` com `no-cache, must-revalidate` + `Header unset Expires` (navegador revalida sempre; 304 barato quando não mudou). Imagens seguem com cache longo. Versões bumpadas (`estilos.css?v=14`) para furar o cache já travado nos navegadores.
+- **Re-upload:** `.htaccess`, `index.html`.
+
+## 2026-07-27 — Parcerias: lista única (não muda por aba), com logo da rede
+
+- **Pedido:** Parcerias deixa de alternar por aba Instagram/TikTok — vira uma coisa só —, mantendo o logo da rede em cada card.
+- **Arquivos:** `js/principal.js` (`montarConteudos` não filtra mais por `redeSelecionada`; empty state genérico; removida a re-renderização no clique das abas), `index.html` (`principal.js?v=11`).
+- **Nota:** o logo por card continua vindo do campo `rede` de cada item em `js/parcerias.js` — é ele que define IG ou TikTok no card, independente da aba de Performance.
+- **Validação:** 10 cards / 10 bolinhas; lista idêntica antes e depois de trocar a aba; logos por card = 4 Instagram (Reels) + 6 TikTok (Vídeo) na mesma lista; console limpo.
+- **Re-upload:** `index.html`, `js/principal.js`.
+
 ## 2026-07-26 — Setas de navegação no carrossel (desktop)
 
 - **Pedido:** setas de navegação no carrossel de Parcerias na versão desktop, na cor laranja dos botões.
