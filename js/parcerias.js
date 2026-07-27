@@ -18,7 +18,7 @@ window.DADOS_PARCERIAS = [
     "rede": "Instagram",
     "formato": "Reels",
     "data": "29/05/2026",
-    "descricao": "Campanha com a Higiebox 1 reels.",
+    "descricao": "Reels orgânico com utilização para divulgação de serviço.",
     "capa": "/imagens/parcerias/higiebox.webp",
     "link": "https://www.instagram.com/reel/DY72tN-xHLm/",
     "metricas": {
@@ -35,7 +35,7 @@ window.DADOS_PARCERIAS = [
     "rede": "Instagram",
     "formato": "Reels",
     "data": "10/05/2026",
-    "descricao": "Studio 11 - Customização",
+    "descricao": "Reels estilo unboxing para apresentação,  demonstração e utilização do produto.",
     "capa": "/imagens/parcerias/studio11.webp",
     "link": "https://www.instagram.com/reels/DYLJhSNTAXw/",
     "metricas": {
@@ -52,7 +52,7 @@ window.DADOS_PARCERIAS = [
     "rede": "Instagram",
     "formato": "Reels",
     "data": "28/04/2026",
-    "descricao": "Blaise - Problema x Solução",
+    "descricao": "Reels no estilo problema x solução, para divulgação de diferencial do produto.",
     "capa": "/imagens/parcerias/blaise.jpeg",
     "link": "https://www.instagram.com/reels/DXrfWmmE-1r/",
     "metricas": {
@@ -69,7 +69,7 @@ window.DADOS_PARCERIAS = [
     "rede": "Instagram",
     "formato": "Reels",
     "data": "21/04/2026",
-    "descricao": "Blaise Unboxing",
+    "descricao": "Reels estilo unboxing para apresentação do produto em lançamento.",
     "capa": "/imagens/parcerias/blaise.jpeg",
     "link": "https://www.instagram.com/reels/DXZX5s4k59e/",
     "metricas": {
