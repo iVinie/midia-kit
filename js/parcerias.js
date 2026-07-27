@@ -1,15 +1,16 @@
 /**
  * PARCERIAS — editável à mão (NÃO é tocado pelo RPA)
  * ------------------------------------------------------------------
- * Cada item vira um card na seção "Parcerias".
+ * Cada item vira um card no carrossel da seção "Parcerias".
+ * A parceria aparece na aba da rede indicada em "rede".
  * Campos:
- *   rede       -> "Instagram" ou "TikTok" (aparece o selo)
+ *   rede       -> "Instagram" ou "TikTok" (define a aba e o ícone)
  *   formato    -> "Reels", "Vídeo", "Publipost"...
  *   data       -> texto livre, ex.: "Ago/2026"
- *   capa       -> caminho de uma imagem (opcional), ex.: "imagens/parcerias/marca.jpg"
- *                 deixe "" para não mostrar imagem
+ *   descricao  -> texto curto explicando o que foi a parceria (opcional)
+ *   capa       -> caminho de imagem (opcional), ex.: "imagens/parcerias/marca.jpg"
  *   link       -> link do post/vídeo (opcional; se tiver, o card vira clicável)
- *   metricas   -> só o que você quiser mostrar; o resto some sozinho
+ *   metricas   -> só o que quiser mostrar; o resto some sozinho
  * ------------------------------------------------------------------ */
 
 window.DADOS_PARCERIAS = [
@@ -17,102 +18,75 @@ window.DADOS_PARCERIAS = [
     "rede": "Instagram",
     "formato": "Reels",
     "data": "29/05/2026 às 17:01",
-    "capa": "",
+    "descricao": "Campanha com a Higiebox 1 reels.",
+    "capa": "/imagens/parcerias/higiebox.webp",
     "link": "https://www.instagram.com/reel/DY72tN-xHLm/",
     "metricas": {
-      "views": 511939,
+      "views": 512134,
       "curtidas": 38600,
       "comentarios": 635,
       "compartilhamentos": 20829,
       "salvamentos": 2579,
       "alcance": 358159,
-      "engajamento": 62985
+      "engajamento": 63006
     }
   },
   {
     "rede": "Instagram",
     "formato": "Reels",
-    "data": "14/07/2026 às 17:59",
-    "capa": "",
-    "link": "https://www.instagram.com/reel/DayZsvSTwoI/",
+    "data": "28/04/2026 às 17:59",
+    "descricao": "Blaise - Problema x Solução",
+    "capa": "/imagens/parcerias/blaise.jpeg",
+    "link": "https://www.instagram.com/reels/DXrfWmmE-1r/",
     "metricas": {
-      "views": 123572,
-      "curtidas": 30646,
-      "comentarios": 2667,
-      "compartilhamentos": 3590,
-      "salvamentos": 1547,
-      "alcance": 95388,
-      "engajamento": 39510
+      "views": 21734,
+      "curtidas": 1200,
+      "comentarios": 58,
+      "compartilhamentos": 203,
+      "salvamentos": 337,
+      "alcance": 16595,
+      "engajamento": 1.803
     }
   },
   {
     "rede": "Instagram",
     "formato": "Reels",
-    "data": "01/06/2026 às 17:52",
-    "capa": "",
-    "link": "https://www.instagram.com/reel/DZDq01cT22y/",
+    "data": "10/05/2026 às 17:52",
+    "descricao": "Studio 11 - Customização",
+    "capa": "/imagens/parcerias/studio11.webp",
+    "link": "https://www.instagram.com/reels/DYLJhSNTAXw/",
     "metricas": {
-      "views": 163385,
-      "curtidas": 14912,
-      "comentarios": 289,
-      "compartilhamentos": 1857,
-      "salvamentos": 1679,
-      "alcance": 109222,
-      "engajamento": 18838
+      "views": 12466,
+      "curtidas": 565,
+      "comentarios": 38,
+      "compartilhamentos": 29,
+      "salvamentos": 55,
+      "alcance": 8026,
+      "engajamento": 694
     }
   },
   {
     "rede": "Instagram",
     "formato": "Reels",
     "data": "08/06/2026 às 17:15",
-    "capa": "",
-    "link": "https://www.instagram.com/reel/DZVoRfyp4ye/",
+    "descricao": "Blaise Unboxing",
+    "capa": "/imagens/parcerias/blaise.jpeg",
+    "link": "https://www.instagram.com/reels/DXZX5s4k59e/",
     "metricas": {
-      "views": 57889,
-      "curtidas": 6852,
-      "comentarios": 172,
-      "compartilhamentos": 599,
-      "salvamentos": 929,
-      "alcance": 41586,
-      "engajamento": 8631
-    }
-  },
-  {
-    "rede": "Instagram",
-    "formato": "Reels",
-    "data": "13/07/2026 às 18:19",
-    "capa": "",
-    "link": "https://www.instagram.com/reel/Dav3ULxzaTh/",
-    "metricas": {
-      "views": 27167,
-      "curtidas": 2601,
-      "comentarios": 31,
-      "compartilhamentos": 107,
-      "salvamentos": 80,
-      "alcance": 14961,
-      "engajamento": 2871
-    }
-  },
-  {
-    "rede": "Instagram",
-    "formato": "Reels",
-    "data": "22/05/2026 às 18:29",
-    "capa": "",
-    "link": "https://www.instagram.com/reel/DYp_KMMTopb/",
-    "metricas": {
-      "views": 24740,
-      "curtidas": 2095,
-      "comentarios": 49,
-      "compartilhamentos": 99,
-      "salvamentos": 91,
-      "alcance": 14243,
-      "engajamento": 2353
+      "views": 9976,
+      "curtidas": 300,
+      "comentarios": 25,
+      "compartilhamentos": 38,
+      "salvamentos": 88,
+      "alcance": 6794,
+      "engajamento": 452
     }
   },
   {
     "rede": "TikTok",
     "formato": "Vídeo",
     "data": "29/05/2026 às 17:20",
+    "descricao": "Ex.: vídeo de unboxing do capacete da Marca Y, com cupom de desconto para a comunidade.",
     "capa": "",
     "link": "https://www.tiktok.com/@iibiank/video/7645401529251417365?utm_campaign=tt4d_open_api&utm_source=aw77esvx2dqumjlw",
     "metricas": {
@@ -127,6 +101,7 @@ window.DADOS_PARCERIAS = [
     "rede": "TikTok",
     "formato": "Vídeo",
     "data": "01/06/2026 às 17:58",
+    "descricao": "",
     "capa": "",
     "link": "https://www.tiktok.com/@iibiank/video/7646534201835064596?utm_campaign=tt4d_open_api&utm_source=aw77esvx2dqumjlw",
     "metricas": {
@@ -141,6 +116,7 @@ window.DADOS_PARCERIAS = [
     "rede": "TikTok",
     "formato": "Vídeo",
     "data": "24/04/2026 às 18:29",
+    "descricao": "",
     "capa": "",
     "link": "https://www.tiktok.com/@iibiank/video/7632441066444147988?utm_campaign=tt4d_open_api&utm_source=aw77esvx2dqumjlw",
     "metricas": {
@@ -155,6 +131,7 @@ window.DADOS_PARCERIAS = [
     "rede": "TikTok",
     "formato": "Vídeo",
     "data": "08/06/2026 às 17:34",
+    "descricao": "",
     "capa": "",
     "link": "https://www.tiktok.com/@iibiank/video/7649125718311423252?utm_campaign=tt4d_open_api&utm_source=aw77esvx2dqumjlw",
     "metricas": {
@@ -169,6 +146,7 @@ window.DADOS_PARCERIAS = [
     "rede": "TikTok",
     "formato": "Vídeo",
     "data": "16/07/2026 às 10:14",
+    "descricao": "",
     "capa": "",
     "link": "https://www.tiktok.com/@iibiank/video/7663113548746509588?utm_campaign=tt4d_open_api&utm_source=aw77esvx2dqumjlw",
     "metricas": {
@@ -183,6 +161,7 @@ window.DADOS_PARCERIAS = [
     "rede": "TikTok",
     "formato": "Vídeo",
     "data": "06/05/2026 às 19:11",
+    "descricao": "",
     "capa": "",
     "link": "https://www.tiktok.com/@iibiank/video/7636904740990815508?utm_campaign=tt4d_open_api&utm_source=aw77esvx2dqumjlw",
     "metricas": {

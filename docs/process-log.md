@@ -106,6 +106,30 @@
 - **Validação:** NÃO consegui executar PHP localmente (sem PHP no PATH; Docker Desktop não subiu a tempo; download de PHP portátil não resolveu). Fiz revisão linha a linha; a lógica é idêntica ao `.js` já testado com dados reais. Corrigi 1 bug encontrado na revisão: uso de `STDERR` quebraria no disparo via web. **Pendente: teste no próprio servidor** (rodar 1x pelo hPanel/SSH antes de agendar) — documentado no LEIA-ME.
 - **Estrutura de pastas no Hostinger é igual à do projeto** (confirmado pela cliente), então `__DIR__ . '/../js/dados.js'` resolve certo.
 
+## 2026-07-26 — Bug: dados atualizam no arquivo mas não no navegador (cache)
+
+- **Sintoma:** o RPA reescreve `js/dados.js` (visível no File Manager), mas o site mostra números velhos, mesmo limpando cache do navegador e do servidor.
+- **Causa:** o `dados.js` era carregado com `?v=1` FIXO. Como a URL nunca muda, uma camada de cache (provável CDN/edge do Hostinger, que "limpar cache do servidor" não zera) servia a cópia antiga. O RPA muda o conteúdo mas não a URL, então o cache não invalidava.
+- **Correção:** carregar `dados.js` com **timestamp único por visita** via `document.write('<script src="js/dados.js?t=' + Date.now() + '">')` — URL sempre nova fura qualquer cache (mesma-origem, sem intervention do Chrome). Reforçado o `.htaccess`: `FilesMatch (index.html|dados.js)` com `Cache-Control no-cache/no-store`, `Pragma`, `Expires 0` e fallback `mod_expires`.
+- **Validação:** `dados.js` carrega como `?t=<ms>`; `window.DADOS_MIDIA_KIT` OK; destaques renderizam; console sem erros/avisos (document.write de script same-origin não dispara intervention).
+- **Re-upload:** `index.html`, `.htaccess`. (Depois, limpar o cache do Hostinger 1x pra ele pegar o index.html novo; daí em diante o timestamp resolve sozinho.)
+
+## 2026-07-26 — Setas de navegação no carrossel (desktop)
+
+- **Pedido:** setas de navegação no carrossel de Parcerias na versão desktop, na cor laranja dos botões.
+- **Arquivos:** `index.html` (2 `<button class="carrossel__seta">` com SVG chevron dentro de `.carrossel`; `css v=13`, `principal v=10`), `css/estilos.css` (`.carrossel__seta` laranja/circular, `display:none` no mobile e `inline-flex` a partir de 900px; `.carrossel { padding: 0 52px }` no desktop pra abrir gutter pras setas), `js/principal.js` (em `configurarCarrossel`: `onclick` rola ±1 card com `scrollBy`; `atualizarSetas()` desativa no início/fim, chamada no `onscroll` e no init).
+- **Decisão técnica:** gutter de 52px no `.carrossel` (desktop) pra as setas ficarem nas laterais SEM cobrir os cards (confirmado: seta esq termina em x=152, 1º card começa em x=164). Cor `--cor-laranja`; hover `--cor-laranja-escuro`; `disabled` esmaece. Só no desktop (mobile usa arrasto + bolinhas).
+- **Validação:** setas visíveis no desktop, cor `rgb(229,77,46)`, esquerda desativada no início / direita ativa; não cobrem card; sem overflow horizontal; console limpo. (Preview não simula o scroll do clique, mas `scrollBy` é padrão.)
+- **Re-upload:** `index.html`, `css/estilos.css`, `js/principal.js`.
+
+## 2026-07-26 — Parcerias vira carrossel + campo descrição
+
+- **Pedido:** carrossel (3 no desktop, 1 no mobile), frase itálica cinza em cima ("arraste para o lado para ver mais"), bolinhas embaixo indicando a quantidade, e um campo novo de descrição por parceria.
+- **Arquivos:** `index.html` (dica + `.carrossel` > `.carrossel__trilha#gradeConteudos` + `.carrossel__bolas`; `css v=12`, `principal v=9`, `parcerias v=2`), `js/parcerias.js` (campo `descricao` em cada item, header atualizado, 2 exemplos preenchidos), `js/principal.js` (`escaparHtml`; `montarConteudos` monta descrição + chama `configurarCarrossel`; nova função `configurarCarrossel` gera bolinhas, clique rola até o card, `onscroll` marca a bolinha ativa), `css/estilos.css` (`.carrossel*`, `.cartao-conteudo__descricao`; substituídas as regras antigas `.grade-conteudos`).
+- **Decisão técnica:** carrossel com **scroll-snap nativo** (arrasta no touch e no desktop, sem biblioteca). Card = `flex:0 0 100%` no mobile; `flex-basis calc((100%-12px)/2)` a partir de 620px (2) e `calc((100%-24px)/3)` a partir de 900px (3). Bolinha ativa = `round(scrollLeft/(larguraCard+gap))`; `GAP=12` no JS bate com o `gap` do CSS. `descricao` escapada com `escaparHtml`. Barra de rolagem escondida.
+- **Validação (browser):** desktop 3,0 por tela / mobile 0,97 (=1); dica itálica cinza; 6 cards → 6 bolinhas; card visível casa com a bolinha ativa; descrição renderiza (cor texto-suave); trilha rolável (scrollWidth 2092 > clientWidth). *O preview não simula `scrollLeft` programático, mas a trilha é rolável de verdade e o onscroll é padrão.* Console sem erros.
+- **Re-upload:** `index.html`, `js/parcerias.js`, `js/principal.js`, `css/estilos.css`.
+
 ## 2026-07-26 — Parcerias: filtrar por aba + ícone da plataforma
 
 - **Pedido:** parceria do TikTok só na aba TikTok e do Instagram só na do Instagram (não misturar); e mostrar o ícone da plataforma em cada card.

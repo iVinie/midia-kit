@@ -31,10 +31,15 @@ RedirectMatch 404 /\.env
   </IfModule>
 </Files>
 
-# --- js/dados.js é reescrito TODO DIA pelo RPA: não pode ficar em cache,
-#     senão o visitante veria números velhos. O navegador revalida sempre. ---
-<Files "dados.js">
+# --- HTML, CSS e JS: sempre revalidar (nunca servir versão velha do cache).
+#     O Hostinger põe max-age de 7 dias por padrão em CSS/JS, o que fazia o
+#     navegador travar numa versão antiga. Aqui o navegador checa toda vez
+#     (304 barato se não mudou; baixa de novo só quando o arquivo muda).
+#     As imagens (webp) continuam com cache longo — não mudam. ---
+<FilesMatch "\.(html|css|js)$">
   <IfModule mod_headers.c>
     Header set Cache-Control "no-cache, must-revalidate"
+    Header unset Expires
+    Header set Pragma "no-cache"
   </IfModule>
-</Files>
+</FilesMatch>

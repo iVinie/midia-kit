@@ -512,10 +512,90 @@ a { color: var(--cor-vermelho-texto); }
 /* ------------------------------------------------------------------
    8. CONTEÚDOS EM ALTA
    ------------------------------------------------------------------ */
-.grade-conteudos {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+/* ---- Carrossel de Parcerias ---- */
+/* Dica em itálico cinza acima do carrossel */
+.carrossel-dica {
+  font-style: italic;
+  color: var(--cor-cinza-claro);
+  font-size: 0.82rem;
+  margin-bottom: 12px;
+}
+
+.carrossel { position: relative; }
+
+/* Setas de navegação — só aparecem no desktop (mobile usa arrasto + bolinhas) */
+.carrossel__seta {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: none;                 /* escondidas por padrão (mobile) */
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--cor-laranja);
+  color: var(--cor-clara);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+.carrossel__seta:hover { background: var(--cor-laranja-escuro); }
+.carrossel__seta:disabled { opacity: 0.3; cursor: default; }
+.carrossel__seta--esq { left: 0; }
+.carrossel__seta--dir { right: 0; }
+
+/* Trilha rolável horizontal com "encaixe" (scroll-snap). Arrasta no touch e no desktop. */
+.carrossel__trilha {
+  display: flex;
+  gap: 12px;                     /* precisa bater com o GAP no principal.js */
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+  scrollbar-width: none;         /* Firefox: esconde a barra */
+}
+.carrossel__trilha::-webkit-scrollbar { display: none; }  /* WebKit: esconde a barra */
+
+/* Cada card ocupa a largura de "1 por vez" no mobile */
+.carrossel__trilha > .cartao-conteudo {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+/* Bolinhas indicadoras embaixo */
+.carrossel__bolas {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+.carrossel__bola {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  cursor: pointer;
+  transition: background 0.2s ease, width 0.2s ease;
+}
+.carrossel__bola:hover { background: rgba(255, 255, 255, 0.4); }
+.carrossel__bola--ativa {
+  width: 22px;
+  background: var(--cor-laranja);
+}
+
+/* Descrição curta da parceria */
+.cartao-conteudo__descricao {
+  font-size: 0.86rem;
+  color: var(--cor-texto-suave);
+  margin: 2px 0 14px;
+  line-height: 1.45;
 }
 
 .cartao-conteudo {
@@ -651,7 +731,8 @@ a { color: var(--cor-vermelho-texto); }
 
 .botao-principal {
   background-color: var(--cor-clara);        /* botão branco sobre a faixa laranja */
-  color: var(--cor-laranja-escuro);          /* texto escuro p/ contraste no branco */
+  color: var(--cor-laranja-escuro);    
+    cursor: pointer;      /* texto escuro p/ contraste no branco */
 }
 .botao-principal:hover { background-color: #FFF3F0; }
 
@@ -852,7 +933,7 @@ select.campo__entrada { appearance: none; cursor: pointer; }
    ------------------------------------------------------------------ */
 @media (min-width: 620px) {
   .grade-metricas   { grid-template-columns: repeat(3, 1fr); }
-  .grade-conteudos  { grid-template-columns: repeat(2, 1fr); }
+  .carrossel__trilha > .cartao-conteudo { flex-basis: calc((100% - 12px) / 2); }  /* 2 por vez */
   .chamada-final__acoes { flex-direction: row; justify-content: center; }
   .perfil__nome { font-size: 2.1rem; }
 }
@@ -882,7 +963,9 @@ select.campo__entrada { appearance: none; cursor: pointer; }
   .grade-publico { grid-template-columns: 1fr 1fr; }
   .cartao-publico--largo { grid-column: 1 / -1; }
 
-  .grade-conteudos { grid-template-columns: repeat(3, 1fr); }
+  .carrossel { padding: 0 52px; }                 /* espaço pras setas nas laterais */
+  .carrossel__seta { display: inline-flex; }      /* setas só no desktop */
+  .carrossel__trilha > .cartao-conteudo { flex-basis: calc((100% - 24px) / 3); }  /* 3 por vez */
 
   .secao__titulo { font-size: 1.5rem; }
 }

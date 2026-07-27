@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">
   <!-- O "?v=1" força o navegador a baixar a versão nova depois de subir o arquivo.
        Ao atualizar css/js/dados, troque para ?v=2, ?v=3 ... -->
-  <link rel="stylesheet" href="css/estilos.css?v=11">
+  <link rel="stylesheet" href="css/estilos.css?v=14">
   <link rel="stylesheet" href="css/icones.css?v=2">
 </head>
 <body>
@@ -159,7 +159,20 @@
     <!-- ============ CONTEÚDOS EM ALTA ============ -->
     <section class="secao" id="conteudos" aria-labelledby="tituloConteudos">
       <h2 class="secao__titulo" id="tituloConteudos"><span class="icone icone-conteudos" aria-hidden="true"></span>Parcerias</h2>
-      <div class="grade-conteudos" id="gradeConteudos"></div>
+
+      <p class="carrossel-dica" id="carrosselDica">arraste para o lado para ver mais - Dados atualizado 27/07/2026</p>
+
+      <div class="carrossel">
+        <button class="carrossel__seta carrossel__seta--esq" id="carrosselAnterior" type="button" aria-label="Parceria anterior">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <div class="carrossel__trilha" id="gradeConteudos"></div>
+        <button class="carrossel__seta carrossel__seta--dir" id="carrosselProximo" type="button" aria-label="Próxima parceria">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <div class="carrossel__bolas" id="carrosselBolas" role="tablist" aria-label="Navegar pelas parcerias"></div>
     </section>
 
     <!-- ============ CHAMADA FINAL ============ -->
@@ -233,8 +246,11 @@
     </div>
   </footer>
 
-  <script src="js/dados.js?v=1"></script>
-  <script src="js/parcerias.js?v=1"></script>
-  <script src="js/principal.js?v=8"></script>
+  <!-- dados.js é reescrito TODO DIA pelo RPA. O ?t= com timestamp único a cada
+       visita força o navegador E qualquer cache (CDN/servidor) a sempre baixar
+       a versão nova — senão o visitante veria números velhos. -->
+  <script>document.write('<scr' + 'ipt src="js/dados.js?t=' + Date.now() + '"><\/scr' + 'ipt>');</script>
+  <script src="js/parcerias.js?v=2"></script>
+  <script src="js/principal.js?v=10"></script>
 </body>
 </html>

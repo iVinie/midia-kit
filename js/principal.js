@@ -77,6 +77,13 @@
     return nome ? '<span class="icone icone-' + nome + '" aria-hidden="true"></span>' : '';
   }
 
+  /** Escapa texto para inserir com segurança em HTML (ex.: descrição da parceria). */
+  function escaparHtml(txt) {
+    return String(txt).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
   /* ----------------------------------------------------------------
      TOPO — números de destaque
      ---------------------------------------------------------------- */
@@ -183,18 +190,24 @@
   function montarConteudos() {
     // As Parcerias vêm de js/parcerias.js (editado à mão; o RPA NÃO toca aqui).
     // Mostra só as da rede selecionada na aba (não mistura Instagram/TikTok).
+    var trilha = buscar('gradeConteudos');
+    var bolas  = buscar('carrosselBolas');
+    var dica   = buscar('carrosselDica');
+
     var parcerias = (window.DADOS_PARCERIAS || []).filter(function (p) {
       return (p.rede || '').toLowerCase() === redeSelecionada;
     });
 
     if (parcerias.length === 0) {
       var nomeRede = dados.redes[redeSelecionada] ? dados.redes[redeSelecionada].nome : 'esta rede';
-      buscar('gradeConteudos').innerHTML =
+      trilha.innerHTML =
         '<p class="aviso-sem-conteudo">Nenhuma parceria de ' + nomeRede + ' cadastrada. Adicione em <code>js/parcerias.js</code>.</p>';
+      if (bolas) bolas.innerHTML = '';
+      if (dica)  dica.style.display = 'none';
       return;
     }
 
-    buscar('gradeConteudos').innerHTML = parcerias.map(function (conteudo) {
+    trilha.innerHTML = parcerias.map(function (conteudo) {
       var m = conteudo.metricas || {};
       var redeInfo = dados.redes[(conteudo.rede || '').toLowerCase()];
       var iconePlataforma = conteudo.rede
@@ -225,6 +238,10 @@
         ? '<img class="cartao-conteudo__capa" src="' + conteudo.capa + '" alt="Capa da parceria" loading="lazy" onerror="this.remove()">'
         : '';
 
+      var descricao = conteudo.descricao
+        ? '<p class="cartao-conteudo__descricao">' + escaparHtml(conteudo.descricao) + '</p>'
+        : '';
+
       var interno =
         '<div class="cartao-conteudo__topo">' +
           '<span class="cartao-conteudo__formato">' + conteudo.formato + '</span>' +
@@ -233,12 +250,66 @@
           '<span class="cartao-conteudo__data">' + conteudo.data + '</span>' +
         '</div>' +
         capa +
+        descricao +
         '<div class="cartao-conteudo__metricas">' + metricasHtml + '</div>';
 
       return conteudo.link
         ? '<a class="cartao-conteudo" href="' + conteudo.link + '" target="_blank" rel="noopener">' + interno + '</a>'
         : '<article class="cartao-conteudo">' + interno + '</article>';
     }).join('');
+
+    configurarCarrossel(trilha, bolas, dica);
+  }
+
+  /* Monta as bolinhas e liga o rolar do carrossel (bolinha ativa acompanha). */
+  function configurarCarrossel(trilha, bolas, dica) {
+    var cards = trilha.querySelectorAll('.cartao-conteudo');
+    var total = cards.length;
+    var GAP = 12; // precisa bater com o gap do CSS (.carrossel__trilha)
+
+    // A dica e as bolinhas só fazem sentido se houver mais de um card
+    if (dica) dica.style.display = total > 1 ? '' : 'none';
+    if (!bolas) return;
+    bolas.style.display = total > 1 ? '' : 'none';
+
+    bolas.innerHTML = '';
+    for (var i = 0; i < total; i++) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'carrossel__bola' + (i === 0 ? ' carrossel__bola--ativa' : '');
+      b.setAttribute('aria-label', 'Ir para a parceria ' + (i + 1));
+      (function (indice) {
+        b.addEventListener('click', function () {
+          trilha.scrollTo({ left: indice * (cards[0].offsetWidth + GAP), behavior: 'smooth' });
+        });
+      })(i);
+      bolas.appendChild(b);
+    }
+
+    // Setas (desktop): rolam um card por clique e desativam no início/fim
+    var setaEsq = buscar('carrosselAnterior');
+    var setaDir = buscar('carrosselProximo');
+    if (setaEsq) setaEsq.onclick = function () { trilha.scrollBy({ left: -(cards[0].offsetWidth + GAP), behavior: 'smooth' }); };
+    if (setaDir) setaDir.onclick = function () { trilha.scrollBy({ left:  (cards[0].offsetWidth + GAP), behavior: 'smooth' }); };
+
+    function atualizarSetas() {
+      var noInicio = trilha.scrollLeft <= 2;
+      var noFim = trilha.scrollLeft >= (trilha.scrollWidth - trilha.clientWidth - 2);
+      if (setaEsq) setaEsq.disabled = noInicio;
+      if (setaDir) setaDir.disabled = noFim;
+    }
+
+    trilha.scrollLeft = 0;
+    trilha.onscroll = function () {
+      var passo = cards[0].offsetWidth + GAP;
+      var ativo = Math.round(trilha.scrollLeft / passo);
+      ativo = Math.max(0, Math.min(total - 1, ativo));
+      for (var j = 0; j < bolas.children.length; j++) {
+        bolas.children[j].classList.toggle('carrossel__bola--ativa', j === ativo);
+      }
+      atualizarSetas();
+    };
+    atualizarSetas();
   }
 
   /* ----------------------------------------------------------------
