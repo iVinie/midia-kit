@@ -236,6 +236,21 @@
         ? '<img class="cartao-conteudo__capa" src="' + conteudo.capa + '" alt="Capa da parceria" loading="lazy" onerror="this.remove()">'
         : '';
 
+      // Rodapé "Ver no ..." — no celular não existe :hover, então o card
+      // precisa ANUNCIAR que é clicável antes do toque.
+      // O rótulo e o ícone seguem a rede do próprio card ("Ver no Instagram"
+      // ou "Ver no TikTok"), definidos pelo campo "rede" em js/parcerias.js.
+      var redeSlug = (conteudo.rede || '').toLowerCase();
+      var verPost = conteudo.link
+        ? '<span class="botao-ver-post">' +
+            (redeSlug ? '<span class="icone icone-' + redeSlug + '" aria-hidden="true"></span>' : '') +
+            'Ver no ' + (conteudo.rede || 'post') +
+            '<svg class="botao-ver-post__seta" viewBox="0 0 24 24" width="13" height="13" fill="none" ' +
+            'stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" ' +
+            'aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>' +
+          '</span>'
+        : '';
+
       var descricao = conteudo.descricao
         ? '<p class="cartao-conteudo__descricao">' + escaparHtml(conteudo.descricao) + '</p>'
         : '';
@@ -249,7 +264,8 @@
         '</div>' +
         capa +
         descricao +
-        '<div class="cartao-conteudo__metricas">' + metricasHtml + '</div>';
+        '<div class="cartao-conteudo__metricas">' + metricasHtml + '</div>' +
+        verPost;
 
       return conteudo.link
         ? '<a class="cartao-conteudo" href="' + conteudo.link + '" target="_blank" rel="noopener">' + interno + '</a>'

@@ -114,6 +114,22 @@
 - **Validação:** `dados.js` carrega como `?t=<ms>`; `window.DADOS_MIDIA_KIT` OK; destaques renderizam; console sem erros/avisos (document.write de script same-origin não dispara intervention).
 - **Re-upload:** `index.html`, `.htaccess`. (Depois, limpar o cache do Hostinger 1x pra ele pegar o index.html novo; daí em diante o timestamp resolve sozinho.)
 
+## 2026-07-27 — "Ver no Instagram/TikTok" vira botão, com ícone da rede
+
+- **Pedido:** botão "Ver no Instagram" / "Ver no TikTok" filtrado pela rede.
+- **Estado anterior:** o rótulo já trocava por rede (`'Ver no ' + conteudo.rede`), mas era só uma linha de texto — e todos os 4 itens do `parcerias.js` são Instagram, então na tela só aparecia "Ver no Instagram".
+- **Arquivos:** `js/principal.js` (botão passa a incluir o ícone da rede: `icone-instagram`/`icone-tiktok` derivado de `conteudo.rede`), `css/estilos.css` (`.botao-ver-post` = pílula com borda laranja; preenche no `:hover` e no `:active`; substituiu `.cartao-conteudo__abrir`), `index.html` (`css v=16`, `principal v=13`).
+- **Validação:** como todos os itens reais são Instagram, adicionei um item TikTok TEMPORÁRIO ao `parcerias.js`, recarreguei e confirmei os 5 botões: 4x "Ver no Instagram → icone-instagram" + 1x "Ver no TikTok → icone-tiktok". Botão com borda/cor `#E54D2E` e raio 999px. **Arquivo restaurado do backup** (4 itens, sem o item de teste — conferido). Console limpo.
+- **Re-upload:** `index.html`, `js/principal.js`, `css/estilos.css`.
+
+## 2026-07-27 — Affordance de clique nos cards de Parceria (mobile)
+
+- **Problema:** o único indício de que o card era clicável era o `:hover` — que não existe no toque. No celular o card parecia só informação.
+- **Decisão:** afordância explícita ANTES do toque (hover/`:active` só reagem depois). Rodapé "Ver no Instagram/TikTok ↗" (seta external-link em SVG inline) separado por borda, na cor de destaque; renderizado só quando o item tem `link`. Somado a `a.cartao-conteudo:active { scale(.985) }` como feedback tátil.
+- **Arquivos:** `js/principal.js` (`verPost` no fim do card), `css/estilos.css` (`.cartao-conteudo__abrir`, `:active`), `index.html` (`css v=15`, `principal v=12`).
+- **Validação:** 4/4 cards com link exibem o rodapé; texto "Ver no Instagram"; SVG presente; cor `#FF9068`; alvo de 34px de altura no rodapé e o card inteiro clicável (350x688); console limpo.
+- **Re-upload:** `index.html`, `js/principal.js`, `css/estilos.css`.
+
 ## 2026-07-27 — Bug: CSS novo não aplicava no site (cache de 7 dias do Hostinger)
 
 - **Sintoma:** no site publicado os cards de Parcerias apareciam empilhados e a seta fora de lugar — visual do CSS antigo, apesar do HTML novo (setas/dica) estar presente.

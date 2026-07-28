@@ -614,6 +614,39 @@ a { color: var(--cor-vermelho-texto); }
   border-color: var(--cor-coral);
 }
 
+/* Feedback ao TOQUE (celular não tem :hover) — o card "afunda" ao ser tocado */
+a.cartao-conteudo:active {
+  transform: scale(0.985);
+  border-color: var(--cor-laranja);
+}
+
+/* Botão "Ver no Instagram / Ver no TikTok" — o rótulo e o ícone seguem a rede
+   do próprio card. Avisa que o card é clicável sem depender de :hover (que não
+   existe no celular). Só aparece nos cards que têm link. */
+.botao-ver-post {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 11px 14px;
+  border: 1px solid var(--cor-laranja);
+  border-radius: 999px;
+  color: var(--cor-laranja);
+  font-size: 0.84rem;
+  font-weight: 700;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.botao-ver-post .icone { width: 15px; height: 15px; }
+.botao-ver-post__seta { opacity: 0.75; }
+
+/* Preenche no hover (desktop) e ao tocar (celular) */
+a.cartao-conteudo:hover .botao-ver-post,
+a.cartao-conteudo:active .botao-ver-post {
+  background-color: var(--cor-laranja);
+  color: var(--cor-clara);
+}
+
 .cartao-conteudo__topo {
   display: flex;
   align-items: center;
