@@ -114,6 +114,16 @@
 - **Validação:** `dados.js` carrega como `?t=<ms>`; `window.DADOS_MIDIA_KIT` OK; destaques renderizam; console sem erros/avisos (document.write de script same-origin não dispara intervention).
 - **Re-upload:** `index.html`, `.htaccess`. (Depois, limpar o cache do Hostinger 1x pra ele pegar o index.html novo; daí em diante o timestamp resolve sozinho.)
 
+## 2026-07-28 — Nome curto "Bianca Marques" + foto de capa visível no desktop
+
+- **Nome:** trocadas as 8 ocorrências de "Bianca Marques Rodrigues" → "Bianca Marques" em `index.html` (h1, rodapé, `description`, `og:title`, `alt` da foto), `README.md`, `CLAUDE.md`, `LEIA-ME.md`. Grep final: 0 restantes.
+- **Foto de capa — diagnóstico:** a imagem é **retrato 1035x1600**. Com `background-size: cover` num banner full-bleed de 1425px de largura, ela renderiza a ~2203px de altura → só **17%** aparecia (daí "só o capacete"). Medi isso no browser; ajustar `background-position` não resolvia, só escolhia QUAL fatia de 17% mostrar.
+- **1ª tentativa (descartada):** foto inteira centralizada (`auto 100%`) com backdrop desfocado nas laterais. Mostrava 100% da imagem, mas a cliente esclareceu que quer a foto **preenchendo o fundo todo**, sem tarja — só com mais do tronco visível. Revertido.
+- **Solução final:** mantém `cover` full-bleed; ganho vem da **altura maior** + enquadramento. Desktop (≥900px): `height: clamp(380px, 48vh, 480px)` e `background-position: center 53%`. O 53% foi escolhido testando no browser: 50% mostrava capacete mas quase nada de tronco; 55%/71% cortavam o topo do capacete; 53% dá capacete inteiro com folga + tronco e braços até a borda do card.
+- **Mobile inalterado:** 200px, `center 48%` (regra base fora do media query).
+- **Validação:** desktop 1366px → banner 413px, `cover`, largura total, posição 53%; mobile 390px → 200px, 48%, sem overflow; console limpo. `css v=19`.
+- **Re-upload:** `index.html`, `css/estilos.css`.
+
 ## 2026-07-27 — "Ver no Instagram/TikTok" vira botão, com ícone da rede
 
 - **Pedido:** botão "Ver no Instagram" / "Ver no TikTok" filtrado pela rede.

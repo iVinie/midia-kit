@@ -974,7 +974,10 @@ select.campo__entrada { appearance: none; cursor: pointer; }
 @media (min-width: 900px) {
   .cabecalho { padding-bottom: 12px; }
 
-  .banner { height: 300px; background-position: center 46%; }
+  /* DESKTOP: foto preenchendo o fundo inteiro (cover). Como a imagem é
+     retrato, só uma faixa dela cabe — a altura maior e o "53%" abaixo
+     escolhem essa faixa: capacete + parte do tronco (não só o capacete). */
+  .banner { height: clamp(380px, 48vh, 480px); background-position: center 53%; }
 
   .cartao-perfil { margin-top: -80px; padding: 28px 32px; }
 
