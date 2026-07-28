@@ -1,4 +1,4 @@
-# Mídia Kit — Bianca Marques Rodrigues
+# Mídia Kit — Bianca Marques
 
 Página única, estática (HTML + CSS + JavaScript). Sem build, sem Node, sem banco.
 Sobe em qualquer hospedagem — Hostinger, HostGator, Vercel, Netlify.

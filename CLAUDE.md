@@ -1,6 +1,6 @@
 # bianca-midia-kit
 
-Objetivo: mídia kit público da creator Bianca Marques Rodrigues (@iibiank) para fechar publis com marcas — substitui o link do Playnest por um domínio dela.
+Objetivo: mídia kit público da creator Bianca Marques (@iibiank) para fechar publis com marcas — substitui o link do Playnest por um domínio dela.
 
 Stack: HTML + CSS + JS puro, sem build · Porquê: cliente vai hospedar em Hostinger/HostGator (FTP, sem Node); página única não justifica framework.
 

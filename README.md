@@ -1,4 +1,4 @@
-# Mídia Kit — Bianca Marques Rodrigues
+# Mídia Kit — Bianca Marques
 
 Página estática (HTML + CSS + JavaScript puro, sem build) com as métricas de
 Instagram e TikTok da creator **@iibiank**, para envio a marcas e agências.
